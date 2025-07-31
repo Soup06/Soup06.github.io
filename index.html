@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Gallery</title>
+		<link rel="icon" href="favicon.png">
+		<link rel="stylesheet" type="text/css" href="styles.css">
+		
+		<style>
+			html, body {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                background-color:#f7efd9;
+                scrollbar-width:none;
+            }		
+            
+		</style>
+        
+        
+	</head>
+
+    <body >
+        <!--Header at top of page (search bar included)-->
+        <div class="page-header">
+            <div id="main-menu-button" class="page-header-button">Main</div>
+            <input class="search-bar" type="text" id="searchField" name="searchField" value="">
+            <div id="submitButton" class="submit-button">Search</div>
+        </div>
+
+
+        <div class="section-layer">
+            <!--
+            Here goes all of the scenes
+            they get created in <script>
+            -->
+        </div>
+        
+        
+        <!--This is the dimmer, darkens the screen while popup is out-->
+        <div onclick="closePopup()" id="dimmer" class="dimmer"></div>
+
+
+        <!--This is the Popup-->
+        <div id="popup" class="popup">
+            <div class="flex-box" id="image-display">
+                <img class="image-screen" src="" alt="(no image)"></img>
+                <div class="image-fader"></div>
+                <div class="popup-image-text">O</div>
+            </div>
+            <div class="popup-stats-flex-box">
+                <div class="popup-stats">
+                    <div class="popup-stats-heading">Parents</div>
+                    <div id="popup-parents" class="popup-stats-description">A</div>
+                </div>
+                <div class="popup-stats">
+                    <div class="popup-stats-heading">Birthday</div>
+                    <div id="popup-birthday" class="popup-stats-description">A</div>
+                </div>
+            </div>
+            <div id="tab-bar" class="popup-tab-bar-flex-box"></div>
+            <div class="popup-body" id="popup-body">
+                <div id="popup-body-header" class="popup-body-header">
+                    It seems there is no header
+                </div>
+                <div class="popup-body-description" id="popup-body-description">
+                    It seems there is no description
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    <script>
+
+        //Find elements
+
+
+        let popup = document.getElementById("popup");
+        //let popupTitle = document.getElementById("popup-title");
+        let popupBody = document.getElementById("popup-body"); 
+        let popupBodyHeader = document.getElementById("popup-body-header");
+        let popupBodyDescription = document.querySelector(".popup-body-description");
+        let btn = document.getElementsByClassName("scene-view-flex-box");
+        let dimmer = document.getElementById("dimmer");
+        let closeBtn = document.getElementById("close-popup");
+        let popupHeadImg = document.getElementById("image-display");
+        let popupTabs = document.getElementById("tab-bar")
+        let popupTabsAll = document.querySelectorAll(".popup-tab")
+        let searchButton = document.getElementById("submitButton")
+        let searchBar = document.getElementById("searchField")
+        let homeButton = document.getElementById("main-menu-button")
+        let birthdayField = document.getElementById("popup-birthday")
+        let parentsField = document.getElementById("popup-parents")
+        
+        //Get the main area for creating scenes
+        let mainArea = document.querySelector(".section-layer")
+
+
+        //________________________________________________________
+
+        //Functions
+
+
+        //Opens the popup window
+        function openPopup(subjectObject) { //subjectObject is the object containing all the desired info. change var name later
+
+            let makeTabs = Object.keys(subjectObject.info)
+
+            dimmer.style.display = "block";
+            //dimmer.classList.add("dimmer-showing")
+            //popup.style.display = "block";
+            popup.classList.add("popup-showing")
+            popup.scrollTop = 0;
+            displayText(subjectObject.info[makeTabs[0]])
+            popupHeadImg.querySelector(".image-screen").src = subjectObject.img;
+            popupHeadImg.querySelector(".popup-image-text").innerHTML = subjectObject.title;
+            birthdayField.innerHTML = subjectObject.birthday;
+            parentsField.innerHTML = subjectObject.parents;
+
+            for (let j = 0; j < makeTabs.length; j ++){
+                //Create the tab and the text node inside
+                const createTab = document.createElement("div")
+                const createTabName = document.createTextNode("(empty)")
+
+                //Gives a class to the tab
+                createTab.classList.add("popup-tab")
+
+                //Sets id for the tab
+                //createTab.id = "popupTab"
+
+                //Attaches the text to the tab, and the tab to the tab bar
+                createTab.appendChild(createTabName)
+                popupTabs.appendChild(createTab)
+
+                //Object with all the data for the button
+                const objectData = subjectObject.info[makeTabs[j]]
+
+                //Changes whats written on the tab to be correct
+                createTab.innerHTML = /*makeTabs[j]*/objectData.header
+
+                createTab.id = objectData.header
+                
+                //Changes the description and heading on click of the tab
+                createTab.addEventListener("click", function(){ 
+                    displayText(objectData)
+                })
+                
+            }          
+            checkPopupTabs()
+            
+        }
+
+        //Closes the popup window
+        function closePopup() {
+            dimmer.style.display = "none";
+            //dimmer.classList.remove("dimmer-showing")
+            //popup.style.display = "none";
+            popup.classList.remove("popup-showing")
+
+            //Get all the tabs for the popup
+            let deleteElements = document.querySelectorAll(".popup-tab")
+            //Deletes all the tabs for the popup
+            deleteElements.forEach((el) => {
+                el.remove()
+            })
+        }
+
+        //Changes the header and description within the popup
+        function displayText(subject) {
+            popupBodyHeader.innerHTML = subject.header
+            popupBodyDescription.innerHTML = subject.description
+
+            checkPopupTabs()
+            
+        }
+
+        //Looks through the tabs, changes their colour when their description is being displayed
+        function checkPopupTabs(){
+            let popupTabsAll = document.querySelectorAll(".popup-tab")
+            popupTabsAll.forEach((tab) => {
+                if (popupBodyHeader.innerHTML === tab.id) {
+                    tab.classList.add("popup-tab-selected")
+                }
+                else{
+                    tab.classList.remove("popup-tab-selected")
+                }
+            })
+        }
+
+        //Creates a new scene element using sceneData
+        function createNewScene(sceneData){
+            //Contains the object with all data for currently targeted button 
+            let displayData = displays[sceneData]  
+
+            
+
+            //Create the elements for the scene
+            const createSceneSpace = document.createElement("div")
+            const createFlexBox = document.createElement("div")
+            const createImg = document.createElement("img")
+            const createSceneTextEl = document.createElement("div")
+            const createSceneTextNode = document.createTextNode("(No <br> title)")
+
+            //Append the children so we can have it in the right layout
+            createSceneSpace.appendChild(createFlexBox)
+            createFlexBox.appendChild(createImg)
+            createFlexBox.appendChild(createSceneTextEl)
+            createSceneTextEl.appendChild(createSceneTextNode)
+
+            //Add classes to everything
+            createSceneSpace.classList.add("scene-space")
+            createFlexBox.classList.add("scene-view-flex-box")
+            createImg.classList.add("scene-view-img")
+            createSceneTextEl.classList.add("scene-view-text")
+
+            //Change the id of things
+            createFlexBox.id = sceneData
+
+            //Insert the image
+            createImg.src = displayData.img
+
+            //Change the text on the title of scene
+            createSceneTextEl.innerHTML = displayData.buttonTitle
+
+            //Add the whole scene to the main area
+            mainArea.appendChild(createSceneSpace)
+            
+            //On scene click, opens the popup
+            createFlexBox.addEventListener("click", function(){ 
+                openPopup(displayData)
+            })
+        }
+
+        //Creates every scene that exists
+        function createAllScenes(){
+            //Delete all currently displayed scenes
+            while (mainArea.firstChild) {
+                mainArea.removeChild(mainArea.firstChild)
+            }
+
+            //Resets the search bar content
+            searchBar.value = ""
+
+            //Finds all the displays in object display
+            displayKeys = Object.keys(displays)
+            //Loops through the list and creates display
+            for (let i = 0; i < displayKeys.length; i ++){
+                createNewScene(displayKeys[i])
+            }
+        }
+
+        //Enter key for search bar
+        function enterSearchQuery(){
+            //If searchbar value isnt none
+            if (searchBar.value != "") {
+                //Delete all currently displayed scenes
+                while (mainArea.firstChild) {
+                    mainArea.removeChild(mainArea.firstChild)
+                }
+
+                //SET VARIABLES
+
+                //Clears the results thing
+                let results = []
+                //Sets the var to the inputted value
+                let inputValue = searchBar.value.toLowerCase()
+                //All the items of the (displays) object
+                let allDisplays = Object.keys(displays)
+
+                //MAIN LOOP
+                
+                //Loops through all items in allDisplays
+                for (i=0; i < allDisplays.length; i ++){
+                    //Variables
+                    let targ = displays[allDisplays[i]]
+                    let value = "o"
+                    let array = targ.tags
+
+                    //If the currently targeted display matches the search function
+                    //Adds it to the list to be created
+                    if (targ.title.toLowerCase() === inputValue){
+                        results.unshift(allDisplays[i])
+                    }
+                    else if (targ.tags.includes(inputValue)){
+                        results.push(allDisplays[i])
+                    }
+                    
+                }
+                //Creates display for each object on list
+                for (let i = 0; i < results.length; i ++){
+                    createNewScene(results[i])
+                }
+            }
+        }
+
+        //________________________________________________________
+
+        //Objects
+
+        //BBX, Taco wednesdays, Joustus, Dr pepper guy
+
+        //Object containing text in all the displays
+        const displays= {
+            display1:{
+                buttonTitle:"Earth",
+                title:"Earth",
+                img:"earth.jpeg",
+                birthday:"Unknown",
+                parents:"God",
+                info: {
+                    info1: {
+                        header: "Life on Earth",
+                        description: "Earth is the only known planet to support life, hosting an extraordinary diversity of organisms ranging from microscopic bacteria to complex multicellular species, all shaped by billions of years of evolution in dynamic ecosystems."
+                    },
+                    info2: {
+                        header: "Natural Resources",
+                        description: "From freshwater and fertile soil to fossil fuels and precious metals, Earth’s resources have sustained civilizations for millennia, though overuse and pollution now pose serious threats to long-term sustainability."
+                    },
+                    info3: {
+                        header: "Fun Facts",
+                        description: "Earth has a molten iron core that generates its magnetic field, spins at roughly 1,600 km/h at the equator, and experiences constant tectonic motion that reshapes its continents over geologic time."
+                    }
+                },
+                tags: ["planet","space","life","environment","biosphere","resources","solar system","science","nature","astronomy"]
+            },
+            display2:{
+                buttonTitle:"Future Redeemed",
+                title:"Future Redeemed",
+                img:"future_redeemed.jpeg",
+                birthday:"26 April 2023",
+                parents: "Monolith Soft / Tetsuya Takahashi",
+                info: {
+                    info1: {
+                        header:"Overview",
+                        description:"Future Redeemed is a <b>DLC</b> game branching from <b>Xenoblade Chronicles 3</b> (Switch). It is the <b>finale</b> to the Klaus Saga, comprising of the 3 numbered <b>Xenoblade</b> games. Future Redeemed revolves around <b>exploration, story,</b> and tactical, real-time <b>combat</b>",
+                    },
+                    info2: {
+                        header: "Carachters",
+                        description: "The cast of Future Redeemed merges carachters from across the previous games. <br><br><b>Matthew Vandham</b> (N's Great grandson)<br>     DPS/Balanced attacker: Constantly cancels attacks into eachother. Mildly broken, but quite fun to play as. <br><br><b>A</b> (Derived from Alvis/Ontos )<br>     Healer: Tried to heal the party while also dealing damage. Didn't succeed at either. <br><br><b>Shulk</b> (XC1)<br>     Evasion tank: Designed to hold aggro and evade attacks. Does poorly at both. <br><br><b>Nikol</b> (Shulk and Fiora's Child)<br>     Face tank/Brick wall: Designed to hold aggro and survive attacks with high health and defence. Unkillable but also doesnt gain aggro. <br><br><b>Glimmer</b> (Rex and Pyra's Child)<br>     Support/Buffer: Keeps the party high on health and damage buffs. <br><br><b>Rex the Gigachad</b> (XC2)<br>     DPS/Glass Cannon: Potentially the most broken party member of the saga. Constant crits, can cancel arts into themselves to do massive damage."
+                    },
+                    info3: {
+                        header: "Gameplay & Themes",
+                        description: "Blending real-time combat, character bonds, and expansive exploration, it dives deep into the nature of memory, choice, and identity while offering refined mechanics and quality-of-life improvements over the base game."
+                    },
+                    info4: {
+                        header: "Series Connection",
+                        description: "As the final game in the Klaus saga, Future Redeemed ties together all of the lore between the games, and provides a sweet end to the plot. It has many throwbacks and references to previous games, and has a cast of carachters from all across the series."
+                    }
+                },
+                tags: ["game","JRPG","Xenoblade","Nintendo","story","combat","sci-fi","fantasy","Switch","Takahashi"]
+            },
+            display3:{
+                buttonTitle:"Hollow Knight",
+                title:"Hollow Knight",
+                img:"hollow_knight.jpeg",
+                birthday:"27 February 2017",
+                parents:"Team Cherry",
+                info: {
+                    info1: {
+                        header: "Overview",
+                        description: "Hollow Knight is a 2D action-adventure game set in the ruined bug kingdom of Hallownest, featuring stunning hand-drawn art, challenging combat, and an intricately interconnected world steeped in mystery and melancholy."
+                    },
+                    info2: {
+                        header: "Gameplay",
+                        description: "Combining tight platforming, Metroidvania-style exploration, and brutal boss fights, it encourages player mastery and curiosity, offering meaningful rewards for those who venture off the beaten path."
+                    },
+                    info3: {
+                        header: "Cultural Impact",
+                        description: "With universal acclaim for its atmosphere, music, and depth, it redefined what indie games could achieve and built a passionate community eagerly awaiting its long-teased sequel, <b>Silksong</b>."
+                    }
+                },
+                tags: ["game","indie","Metroidvania","2D","combat","bugs","exploration","Silksong","platformer","aesthetic"]
+            },
+            display4:{
+                buttonTitle:"Trees",
+                title:"Trees",
+                header:"Description",
+                img:"tree.jpeg", 
+                birthday:"Unknown",
+                parents:"Unknown",
+                info: {
+                    info1: {
+                        header: "Role in Nature",
+                        description: "Trees are ecological pillars that produce oxygen through photosynthesis, stabilize soil, regulate climate, support entire food chains, and serve as homes for countless species, from birds to fungi to humans."
+                    },
+                    info2: {
+                        header: "Types of Trees",
+                        description: "With over 60,000 known species ranging from towering sequoias to delicate bonsai, trees exhibit a huge variety of shapes, lifespans, and growth strategies, thriving in environments from arctic tundra to tropical rainforest."
+                    },
+                    info3: {
+                        header: "Human Use",
+                        description: "Trees have been central to human life for thousands of years, providing materials like wood, fruit, medicine, and shelter, while also featuring prominently in myths, art, spirituality, and modern climate solutions."
+                    }
+                },
+                tags: ["nature","plant","trees","environment","biology","oxygen","forest","photosynthesis","habitat","climate"]
+              
+            },/*
+            display5: {
+                buttonTitle: "Fiordland",
+                title: "Fiordland National Park",
+                img: "fiordland.jpeg",
+                birthday: "1952",
+                parents: "New Zealand Department of Conservation",
+                info: {
+                    info1: {
+                    header: "Location",
+                    description: "Located in the southwest of New Zealand’s South Island, Fiordland is a UNESCO World Heritage Site filled with glaciers, waterfalls, rainforests, and deep fjords including Milford Sound."
+                    },
+                    info2: {
+                    header: "Unique Features",
+                    description: "It’s home to rare wildlife like the takahē and kea, dramatic peaks that plunge into ocean inlets, and lush moss‑coated forests that make it feel almost prehistoric."
+                    },
+                    info3: {
+                    header: "Visitor Experience",
+                    description: "Tourists can explore by boat, helicopter, or hiking the Kepler, Routeburn, or Milford Tracks—some of the world’s most scenic trails through untouched wilderness."
+                    }
+                },
+                tags: ["place","New Zealand","national park","UNESCO","nature","hiking","fjords","wildlife","adventure","ecotourism","landscape"]
+            },*/
+        }
+        
+
+        //________________________________________________________
+
+        //Elements
+
+        //Creates a new scene with the id of (buttonId)
+        /*function createNewScene(buttonId){
+
+            //Get the main area for creating scenes
+            let mainArea = document.querySelector(".section-layer")
+
+            //Create the elements for the scene
+            const createSceneSpace = document.createElement("div")
+            const createFlexBox = document.createElement("div")
+            const createImg = document.createElement("img")
+            const createSceneTextEl = document.createElement("div")
+            const createSceneTextNode = document.createTextNode("(No <br> title)")
+
+            //Append the children so we can have it in the right layout
+            createSceneSpace.appendChild(createFlexBox)
+            createFlexBox.appendChild(createImg)
+            createFlexBox.appendChild(createSceneTextEl)
+            createSceneTextEl.appendChild(createSceneTextNode)
+
+            //Add classes to everything
+            createSceneSpace.classList.add("scene-space")
+            createFlexBox.classList.add("scene-view-flex-box")
+            createImg.classList.add("scene-view-img")
+            createSceneTextEl.classList.add("scene-view-text")
+
+            //Change the id of things
+            createFlexBox.id = buttonId
+
+            //Add the whole scene to the main area
+            mainArea.appendChild(createSceneSpace)
+        }*/
+        
+
+        //Search function
+        searchButton.addEventListener('click', () => {
+            enterSearchQuery()
+        })
+       
+        document.addEventListener('keydown', function(event) {
+            if (document.activeElement == searchBar) {
+                if(event.keyCode == 13) {
+                    enterSearchQuery()
+                }
+            }
+        });
+        
+        //________________________________________________________
+        
+
+        //Creates all the displays
+
+
+        //Same as full code, but using the function
+        
+        //Creates every display that exists
+        createAllScenes()
+
+        //Home button to work
+        homeButton.addEventListener('click', () => {
+            createAllScenes()
+        })
+
+        //Full code
+        /*
+        displayKeys = Object.keys(displays)
+        for (let i = 0; i < displayKeys.length; i ++){
+
+            //Contains the object with all data for currently targeted button 
+            let displayData = displays[displayKeys[i]]  
+
+            //Get the main area for creating scenes
+            let mainArea = document.querySelector(".section-layer")
+
+            //Create the elements for the scene
+            const createSceneSpace = document.createElement("div")
+            const createFlexBox = document.createElement("div")
+            const createImg = document.createElement("img")
+            const createSceneTextEl = document.createElement("div")
+            const createSceneTextNode = document.createTextNode("(No <br> title)")
+
+            //Append the children so we can have it in the right layout
+            createSceneSpace.appendChild(createFlexBox)
+            createFlexBox.appendChild(createImg)
+            createFlexBox.appendChild(createSceneTextEl)
+            createSceneTextEl.appendChild(createSceneTextNode)
+
+            //Add classes to everything
+            createSceneSpace.classList.add("scene-space")
+            createFlexBox.classList.add("scene-view-flex-box")
+            createImg.classList.add("scene-view-img")
+            createSceneTextEl.classList.add("scene-view-text")
+
+            //Change the id of things
+            createFlexBox.id = displayKeys[i]
+
+            //Insert the image
+            createImg.src = displayData.img
+
+            //Change the text on the title of scene
+            createSceneTextEl.innerHTML = displayData.buttonTitle
+
+            //Add the whole scene to the main area
+            mainArea.appendChild(createSceneSpace)
+            
+            //On scene click, opens the popup
+            createFlexBox.addEventListener("click", function(){ 
+                openPopup(displayData)
+            })
+        }*/
+        
+
+    </script>
+    </body>
+    
+    
+</html>
