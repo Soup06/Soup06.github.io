@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Archive of Aleatoria</title>
+		<link rel="icon" href="images/favicon/crystal_ball_favicon-removebg.png">
+		<link rel="stylesheet" type="text/css" href="styles.css">
+		
+		<style>
+			html, body {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                background-color:var(--background);
+                scrollbar-width:none;
+                bottom:0;
+                height:100vh;
+                transition: all .3s ease-in;
+            }		
+            
+		</style>
+        
+        
+	</head>
+
+    <body >
+        <!--Header at top of page (search bar included)-->
+        <div class="page-header">
+            <div id="main-menu-button" class="page-header-button" style="border-left:0; margin:0;">Main</div>
+            <input class="search-bar" type="text" id="searchField" name="searchField" placeholder="Find something" value="">
+            <div id="submitButton" class="submit-button">Search</div>
+            <!--Switches to editor page-->
+            <div id="editor-page-button" style="border-right:0; margin-right:0;" class="page-header-button">Create</div>
+            <div id="random-display-button" style="border-right:0; margin-right:0; margin-left:0;" class="page-header-button">Feeling Lucky</div>
+            <div id="crash-button" style="margin-left:0;" class="page-header-button">Crash</div>
+            <div id="theme-switch" class="theme-switch-button"></div>
+        </div>
+
+
+        <div class="section-layer">
+            <!--
+            Here goes all of the scenes
+            they get created in <script>
+            -->
+        </div>
+        
+        
+        <!--This is the dimmer, darkens the screen while popup is out-->
+        <div onclick="closePopup()" id="dimmer" class="dimmer"></div>
+
+
+        <!--This is the Popup-->
+        <div id="popup" class="popup">
+
+
+            <!--Image and overlay at top-->
+            <div class="flex-box" id="image-display">
+                <img class="image-screen" src="" alt="(no image)"></img>
+                <div class="image-fader"></div>
+                <div class="popup-image-text">Untitled</div>
+                <div class="close-popup-button" id="close-popup">X</div>
+            </div>
+
+
+            <!--Parents and birthday-->
+            <div class="popup-stats-flex-box">
+                <div class="popup-stats">
+                    <div class="popup-stats-heading">Parents</div>
+                    <div id="popup-parents" class="popup-stats-description">Unknown</div>
+                </div>
+                <div class="popup-stats">
+                    <div class="popup-stats-heading">Birthday</div>
+                    <div id="popup-birthday" class="popup-stats-description">Unknown</div>
+                </div>
+            </div>
+
+
+            <!--Main description-->
+            <div id="tab-bar" class="popup-tab-bar-flex-box"></div>
+            <div class="popup-body" id="popup-body">
+                <div id="popup-body-header" class="popup-body-header">
+                    It seems there is no header
+                </div>
+                <div class="popup-body-description" id="popup-body-description">
+                    It seems there is no description
+                </div>
+            </div>
+
+
+            <!--Reviews-->
+            <div class="review-area-header">Reviews</div>
+            
+            <!--The review creator-->
+            <div class="review-create">
+                <div class="review-create-flex-box">
+
+                    <div class="star-selector-wrapper">
+                        <div class="star-selector" id="1">&#x2606</div>
+                        <div class="star-selector" id="2">&#x2606</div>
+                        <div class="star-selector" id="3">&#x2606</div>
+                        <div class="star-selector" id="4">&#x2606</div>
+                        <div class="star-selector" id="5">&#x2606</div>
+                    </div>
+
+                    <div id="review-submit" class="review-submit-button">Submit</div>
+                </div>
+                <input class="review-input" type="text" id="review-input" name="review-input" placeholder="Your thoughts on this topic" value="">
+            </div>
+
+            <!--All the reviews-->
+            <div id="review-section" class="review-area-flex-box">
+                <!--
+                Here goes all of the reviews
+                they get created in <script>
+                -->
+            </div>
+        </div>
+
+    <!--Links the javascript file-->
+    <script src="index.js"></script>
+    <script src="buttons.js"></script>
+
+    </body>
+    
+    
+</html>
