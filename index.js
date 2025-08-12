@@ -1,4 +1,5 @@
-import { writeDatabase, readDatabase } from './dataBase.js';
+import { writeDatabase, readDatabase, setReview } from './dataBase.js';
+import { ref, push } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
 
 //Find elements
@@ -26,6 +27,7 @@ let reviewInputBox = document.getElementById("review-input");
 let starRating = undefined;
 //Current data used for display
 let currentDisplay = 0;
+let currentDisplayKey = 0;
 
 let displays = {}
 
@@ -38,7 +40,7 @@ let displays = {}
 
 
 //Opens the popup window
-function openPopup(subjectObject) {
+function openPopup(subjectObject, subjectKey) {
 
     //Resets the review text
     reviewInputBox.value = ""
@@ -46,9 +48,11 @@ function openPopup(subjectObject) {
     starSelectors.forEach((a) => {
         a.innerHTML = "&#x2606"
     })
-
+    //alert(subjectObject)
     let makeTabs = Object.keys(subjectObject.info)
     currentDisplay = subjectObject
+    currentDisplayKey = subjectKey
+    //alert(currentDisplayKey)
 
     dimmer.style.display = "block";
     //dimmer.classList.add("dimmer-showing")
@@ -92,7 +96,6 @@ function openPopup(subjectObject) {
     }          
     
     displayAllReviews(subjectObject)
-    
     checkPopupTabs()
 }
 
@@ -180,10 +183,10 @@ function displayNewScene(sceneData){
 
     //Add the whole scene to the main area
     mainArea.appendChild(createSceneSpace)
-    
     //On scene click, opens the popup
     createFlexBox.addEventListener("click", function(){ 
-        openPopup(displayData)
+        //alert(displayData, sceneData)
+        openPopup(displayData, sceneData)
     })
 }
 
@@ -355,7 +358,9 @@ function submitReview() {
         const nextReview = reviewKeys.length + 1;
         const nextReviewKey = `review${nextReview}`;
 
-        //Adds the review to the object
+        //Adds the review to the object        
+        setReview(currentDisplayKey, starRating, reviewInputBox.value)
+
         currentDisplay.reviews[nextReviewKey] = {
             reviewer:"You",
             stars:starRating,

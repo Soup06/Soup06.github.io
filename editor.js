@@ -1,13 +1,18 @@
-import { writeDatabase, readDatabase } from './dataBase.js';
+import { writeDatabase, readDatabase, createScene } from './dataBase.js';
 
 
 let createTabButton = document.getElementById("create-tab");
 let popupTabs = document.getElementById("tab-bar");
 let headerInput = document.getElementById("popup-header-input");
 let bodyInput = document.getElementById("popup-body-input");
+let submitCreatorButton = document.getElementById("submit-creator-button");
+let birthdayInput = document.getElementById("popup-birthday-input");
+let parentsInput = document.getElementById("popup-parents-input");
 let currentTab = "data0"
 let oldTab = "data0"
 let unknownTabTitle = "(Untitled)"
+let saveKey = ""
+let allTabs = null
 
 let data = {
     /*info1: {
@@ -124,9 +129,29 @@ function checkTabs(){
     })
 }
 
+//Submits all the data inside the creator
+function submitCreator(){
+    const displayNew = {
+        buttonTitle:"OOO",
+        title:"OOO",
+        img:"images/earth.jpeg",
+        birthday:birthdayInput.value,
+        parents:parentsInput.value,
+        info: data,
+        reviews: {
+        },
+        tags: ["planet","space","life","environment","biosphere","resources","solar system","science","nature","astronomy"]
+    }
+    createScene(displayNew)
+}
+
 //Creates a new tab on click of the tab button
 createTabButton.addEventListener('click', () => {
     createNewTab()
+})
+
+submitCreatorButton.addEventListener('click', () => {
+    submitCreator()
 })
 
 //Checks when the headerInput bar looses focus, and updates the tab titles

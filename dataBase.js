@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+import { getDatabase, ref, set, get, child, push } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -25,30 +25,6 @@ const db = getDatabase(app);
 
 
 // Write to database
-/*function writeDatabase(input){
-    set(ref(db, "entries/display"), input)
-        .then(() => {
-        console.log("Data saved successfully!");
-        })
-        .catch((error) => {
-        console.error("Error saving data:", error);
-        });
-    }*/
-
-// Read from database
-/*function readDatabase(input){
-    get(child(ref(db), input))
-        .then((snapshot) => {
-        if (snapshot.exists()) {
-            console.log("Data from DB:", snapshot.val());
-        } else {
-            console.log("No data found.");
-        }
-        })
-        .catch((error) => {
-        console.error(error);
-    });
-}*/
 
 //Writes a value to the database
 function writeDatabase(location, input){
@@ -87,6 +63,29 @@ async function readDatabase(location){
         return null
     }
 }
+
+function setReview(location, starNumber, reviewText){
+    const reviewsRef = ref(db, /*"displays/display1*/`displays/${location}/reviews`)
+    const newReview = push(reviewsRef)
+    
+    set(newReview, {
+        reviewer:"You",
+        stars:starNumber,
+        review:reviewText,
+    })
+    .then(() => console.log("Review logged"))
+}
+
+function createScene(value){
+    const reviewsRef = ref(db, "displays")
+    const newReview = push(reviewsRef)
+    
+    set(newReview, value)
+    .then(() => console.log("Review logged"))
+}
+
+//createScene(displayNew)
+
 /*readDatabase("displays/display1/info/info1/header").then(data => {
     alert(data)
 })*/
@@ -95,4 +94,4 @@ async function readDatabase(location){
 //writeDatabase("entries/display00", "Holla")
 
 
-export {writeDatabase, readDatabase}
+export {writeDatabase, readDatabase, setReview, createScene}
