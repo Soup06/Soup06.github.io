@@ -32,7 +32,10 @@
             <div id="editor-page-button" style="border-right:0; margin-right:0;" class="page-header-button">Create</div>
             <div id="random-display-button" style="border-right:0; margin-right:0; margin-left:0;" class="page-header-button">Feeling Lucky</div>
             <div id="crash-button" style="margin-left:0;" class="page-header-button">Crash</div>
-            <div id="theme-switch" class="theme-switch-button"></div>
+            <div id="theme-switch" class="theme-switch-button">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
+            </div>
         </div>
 
 
@@ -45,7 +48,7 @@
         
         
         <!--This is the dimmer, darkens the screen while popup is out-->
-        <div onclick="closePopup()" id="dimmer" class="dimmer"></div>
+        <div id="dimmer" class="dimmer"></div>
 
 
         <!--This is the Popup-->
@@ -57,7 +60,7 @@
                 <img class="image-screen" src="" alt="(no image)"></img>
                 <div class="image-fader"></div>
                 <div class="popup-image-text">Untitled</div>
-                <div class="close-popup-button" id="close-popup">X</div>
+                <div class="close-popup-button" id="close-popup">Esc</div>
             </div>
 
 
@@ -115,9 +118,87 @@
             </div>
         </div>
 
-    <!--Links the javascript file-->
-    <script src="index.js"></script>
-    <script src="buttons.js"></script>
+    <!--Links the javascript files-->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBkc4wDWJfRd6692i_4_abor-oyWIQNe3A",
+            authDomain: "archive-35fc6.firebaseapp.com",
+            projectId: "archive-35fc6",
+            storageBucket: "archive-35fc6.firebasestorage.app",
+            messagingSenderId: "550802149160",
+            appId: "1:550802149160:web:d949daf390c353a80b4a1d",
+            measurementId: "G-7GHQ5H5E7E",
+            databaseURL: "https://archive-35fc6-default-rtdb.firebaseio.com/" // needed for Realtime DB
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+
+        // Example object
+        const display5 = {
+            buttonTitle: "Fiordland",
+            title: "Fiordland National Park",
+            img: "images/fiordland.jpeg",
+            birthday: "1952",
+            parents: "New Zealand Department of Conservation",
+            info: {
+            info1: {
+                header: "Location",
+                description: "Located in the southwest..."
+            },
+            info2: {
+                header: "Unique Features",
+                description: "It’s home to rare wildlife..."
+            },
+            info3: {
+                header: "Visitor Experience",
+                description: "Tourists can explore..."
+            }
+            },
+            reviews: {},
+            tags: ["place","New Zealand","national park","UNESCO","nature","hiking","fjords","wildlife","adventure","ecotourism","landscape"]
+        };
+
+        // Write to database
+        function writeDatabase(input){
+            set(ref(db, "entries/display5"), input)
+                .then(() => {
+                console.log("Data saved successfully!");
+                })
+                .catch((error) => {
+                console.error("Error saving data:", error);
+                });
+            }
+
+        // Read from database
+        function readDatabase(input){
+            get(child(ref(db), input))
+                .then((snapshot) => {
+                if (snapshot.exists()) {
+                    console.log("Data from DB:", snapshot.val());
+                } else {
+                    console.log("No data found.");
+                }
+                })
+                .catch((error) => {
+                console.error(error);
+            });
+        }
+    </script>
+    <script type="module" src="dataBase.js"></script>
+    <script type="module" src="index.js"></script>
+    <script type="module" src="buttons.js"></script>
 
     </body>
     

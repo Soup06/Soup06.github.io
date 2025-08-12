@@ -1,3 +1,6 @@
+import { writeDatabase, readDatabase } from './dataBase.js';
+
+
 //Find elements
 let popup = document.getElementById("popup");
 let popupBody = document.getElementById("popup-body"); 
@@ -24,6 +27,8 @@ let starRating = undefined;
 //Current data used for display
 let currentDisplay = 0;
 
+let displays = {}
+
 
 
 
@@ -34,6 +39,13 @@ let currentDisplay = 0;
 
 //Opens the popup window
 function openPopup(subjectObject) {
+
+    //Resets the review text
+    reviewInputBox.value = ""
+    starRating = undefined
+    starSelectors.forEach((a) => {
+        a.innerHTML = "&#x2606"
+    })
 
     let makeTabs = Object.keys(subjectObject.info)
     currentDisplay = subjectObject
@@ -56,10 +68,6 @@ function openPopup(subjectObject) {
 
         //Gives a class to the tab
         createTab.classList.add("popup-tab")
-        //Doesnt let the first tab have a border (looks clean and symetrical)
-        if (j == 0) {
-            createTab.style.border = "0"
-        }
 
         //Sets id for the tab
         //createTab.id = "popupTab"
@@ -190,7 +198,7 @@ function displayAllScenes(){
     searchBar.value = ""
 
     //Finds all the displays in object display
-    displayKeys = Object.keys(displays)
+    let displayKeys = Object.keys(displays)
 
     //Shuffles display
     shuffle(displayKeys)
@@ -393,7 +401,10 @@ function shuffle(array) {
 //BBX, Taco wednesdays, Joustus, Dr pepper guy
 
 //Object containing text in all the displays
-const displays= {
+
+
+/*
+const displaysBuiltin= {
     display1:{
         buttonTitle:"Earth",
         title:"Earth",
@@ -448,6 +459,11 @@ const displays= {
             }
         },
         reviews: {
+            review1: {
+                reviewer: "Person",
+                stars:5,
+                review: "Actual peak game"
+            },
         },
         tags: ["game","JRPG","Xenoblade","Nintendo","story","combat","sci-fi","fantasy","Switch","Takahashi"]
     },
@@ -525,7 +541,7 @@ const displays= {
         },
         tags: ["place","New Zealand","national park","UNESCO","nature","hiking","fjords","wildlife","adventure","ecotourism","landscape"]
     },
-}
+}*/
 
 
 //________________________________________________________
@@ -646,11 +662,6 @@ document.addEventListener('keydown', function(event) {
         }
     }
 });
-/*
-//Home button to work
-homeButton.addEventListener('click', () => {
-    displayAllScenes()
-})*/
 
 //Closes the popup
 closePopupButton.addEventListener('click', () => {
@@ -661,6 +672,11 @@ closePopupButton.addEventListener('click', () => {
 reviewSubmitButton.addEventListener('click', () => {
     submitReview()
 })
+
+dimmer.addEventListener('click', () => {
+    closePopup()
+})
+
 
 //Lets you select star rating on reviews
 starSelectors.forEach((select, index) => {
@@ -675,36 +691,42 @@ starSelectors.forEach((select, index) => {
         starRating = index+1
     });
 });
-/*
-//Lets you switch between dark mode and light mode
-darkModeSwitch.addEventListener('click', () => {
-    if (theme == "light") {
-        theme = "dark"
-        document.body.classList.add("dark-mode")
-    } else if (theme == "dark"){
-        theme = "light"
-        document.body.classList.remove("dark-mode")
+
+let openExplaination={
+    buttonTitle: "Fiordland",
+    title: "Archive of <br> Aleatoria",
+    img: "images/earth.jpeg",
+    birthday: "12 June 2023",
+    parents: "Soup06",
+    info: {
+        info1: {
+        header: "Welcome",
+        description: "This is the Archive of <strong>Aleatoria</strong>. <br> Here you can discover new hobbies, entertainment, locations, and anything else."
+        },
+        info2: {
+        header: "Discover",
+        description: "Our whole database is displayed randomly, so just keep scrolling to find more interesting topics. If you have something in mind, hit the search bar at the top of the screen."
+        },
+        info3: {
+        header: "Posting",
+        description: "In the Archive of <strong>Aleatoria</strong>, you can also share your own interests. <br>Click the <strong>'create'</strong> button at the <strong>top</strong> of the screen, pick a topic, and get writing. The idea is that you can share your <strong>niche</strong> or not so well-known interests with the world. <br>Feel free to talk about <strong>hobbies, entertainment, locations</strong>, anything you want"
+        },
+        
+    },
+    reviews: {
+    },
+    tags: ["place","New Zealand","national park","UNESCO","nature","hiking","fjords","wildlife","adventure","ecotourism","landscape"]
+}
+
+//writeDatabase("displays", displays)
+
+
+//Sets up the page on entry
+readDatabase("displays").then(data => {
+    if (data){
+        displays = data
+        displayAllScenes()
     }
 })
 
-//Opens popup with a random display
-luckyButton.addEventListener('click', () => {
-    //Finds all the displays in object display
-    displayKeys = Object.keys(displays)
-
-    //Shuffles display
-    shuffle(displayKeys)
-    openPopup(displays[displayKeys[0]])
-});
-
-editorPageButton.addEventListener('click', () => {
-    //<a href="editor.html"></a>
-    window.location.href="editor.html"
-})
-
-crashButton.addEventListener('click', () => {
-    for (i = 0; true; i++){}
-})*/
-
-//Sets up the page on entry
-displayAllScenes()
+openPopup(openExplaination)
