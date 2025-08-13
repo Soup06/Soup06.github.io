@@ -22,6 +22,8 @@
         
 	</head>
     <body>
+
+        <!--The yellow bar at the top of the page-->
         <div class="page-header">
 
             <div id="main-menu-button" class="page-header-button" style="border-left:0; margin-left:0; border-right:0; margin-right:0;">Main</div>
@@ -34,13 +36,22 @@
             </div>
         </div>
 
+
         <div class="editor-main">
-            
-            <div class="creator-title">
-                Title
+        
+            <div class="generic-flex">
+                <img src="" id="head-img">
+                <input type="file" accept="image/jpeg, image/png, image/jpg" id="file-input">
             </div>
             <div class="generic-flex">
-                <textArea class="text-input-title" placeholder="Shortened title" maxlength="28"></textArea>
+                <textArea class="text-input-title" id="title-input" placeholder="Title" maxlength="28"></textArea>
+            </div>
+            <div class="generic-flex">
+                <div class="text-label-button">Button Label</div>
+            </div>
+            <div class="generic-flex">
+                <!--Put in main title and shortened title for button, then img upload-->
+                <textArea class="button-head-text-input" id="nickname-input" placeholder="Title Nickname" maxlength="28"></textArea>
             </div>
             
 

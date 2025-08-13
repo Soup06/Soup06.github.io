@@ -8,6 +8,10 @@ let bodyInput = document.getElementById("popup-body-input");
 let submitCreatorButton = document.getElementById("submit-creator-button");
 let birthdayInput = document.getElementById("popup-birthday-input");
 let parentsInput = document.getElementById("popup-parents-input");
+let titleInput = document.getElementById("title-input");
+let nicknameInput = document.getElementById("nickname-input");
+let headImg = document.getElementById("head-img")
+let fileInput = document.getElementById("file-input")
 let currentTab = "data0"
 let oldTab = "data0"
 let unknownTabTitle = "(Untitled)"
@@ -26,45 +30,47 @@ let dataTabs = Object.keys(data)
 //alert(data[dataTabs[0]].header)
 
 function createNewTab() {
+    let popupTabsAllOf = document.getElementsByClassName("popup-tab")
+    if (popupTabsAllOf.length < 7) {
+        //Create the tab and the text node inside
+        const createTab = document.createElement("div")
+        const createTabName = document.createTextNode("")
 
-    //Create the tab and the text node inside
-    const createTab = document.createElement("div")
-    const createTabName = document.createTextNode("")
+        //Gives a class to the tab
+        createTab.classList.add("popup-tab")
 
-    //Gives a class to the tab
-    createTab.classList.add("popup-tab")
-
-    //Attaches the text to the tab, and the tab to the tab bar
-    createTab.appendChild(createTabName)
-    popupTabs.appendChild(createTab)
+        //Attaches the text to the tab, and the tab to the tab bar
+        createTab.appendChild(createTabName)
+        popupTabs.appendChild(createTab)
 
 
-    //This is the Nth tab in the list
-    let tabNumber = (dataTabs.length) 
+        //This is the Nth tab in the list
+        let tabNumber = (dataTabs.length) 
 
-    //Untitles the tab
-    createTab.innerHTML = unknownTabTitle;
+        //Untitles the tab
+        createTab.innerHTML = unknownTabTitle;
 
-    //Gets the next key to use for the object (~info1)
-    const nextKey = `data${tabNumber}`;
+        //Gets the next key to use for the object (~info1)
+        const nextKey = `data${tabNumber}`;
 
-    //Creates a new item in the object and assigns values
-    data[nextKey] = {
-        header:"",
-        description:"",
+        //Creates a new item in the object and assigns values
+        data[nextKey] = {
+            header:"",
+            description:"",
+        }
+
+        //Grabs all the keys in the object
+        dataTabs = Object.keys(data)
+        createTab.id = nextKey
+
+        //Adds event listener
+        createTab.addEventListener('click', () => {
+            oldTab = currentTab
+            currentTab = createTab.id
+            showTabInfo(currentTab, oldTab)
+            checkTabs()
+        })
     }
-
-    //Grabs all the keys in the object
-    dataTabs = Object.keys(data)
-    createTab.id = nextKey
-
-    //Adds event listener
-    createTab.addEventListener('click', () => {
-        oldTab = currentTab
-        currentTab = createTab.id
-        showTabInfo(currentTab, oldTab)
-        checkTabs()
-    })
  
 }
 
@@ -132,8 +138,8 @@ function checkTabs(){
 //Submits all the data inside the creator
 function submitCreator(){
     const displayNew = {
-        buttonTitle:"OOO",
-        title:"OOO",
+        buttonTitle:nicknameInput.value,
+        title:titleInput.value,
         img:"images/earth.jpeg",
         birthday:birthdayInput.value,
         parents:parentsInput.value,
@@ -170,6 +176,10 @@ headerInput.addEventListener("blur", () => {
     //Updates the tab title text to match the correct data
     updateTabTitles()
 });
+
+fileInput.onchange = function() {
+    headImg.src = "`${URL.createObjectUrl(fileInput.files[0])}`"
+}
 
 
 createNewTab()

@@ -404,6 +404,7 @@
     width:90%;
     margin:0 auto;
     height:fit-content;
+    margin-top:95px;
     margin-bottom:45px;
 }
 .popup-stats-left{
@@ -731,7 +732,11 @@
 .generic-flex{
     display: flex;
     justify-content: center;
-    margin-bottom:65px;
+    margin-bottom:10px;
+    margin-top:15px;
+}
+.generic-flex:last-child{
+    margin-bottom:600px
 }
 .text-input-title{
     height: fit-content;
@@ -743,14 +748,41 @@
     outline:none;
     margin-top:8px;
     padding-top:0px;
-    margin-left:15px;
+    margin-left:auto;
+    margin-right:auto;
     width:30%;
-    font-size: 190%;
+    font-size: 210%;
     font-family: Tahoma, sans-serif;
     padding-bottom:2px;
     padding-left:5px;
     font-weight:bold;
-    border-left:6px solid var(--main-text);
-    background-image:linear-gradient(to right, var(--dark-main) , var(--popup-body-background));
     color:var(--dark-secondary);
+    text-align:center;
+}
+.button-head-text-input{
+    height: fit-content;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--popup-body-background);
+    resize: none;
+    outline:none;
+    margin-top:8px;
+    padding-top:0px;
+    margin-left:auto;
+    margin-right:auto;
+    width:25%;
+    font-size: 180%;
+    font-family: Tahoma, sans-serif;
+    padding-bottom:2px;
+    padding-left:5px;
+    font-weight:bold;
+    color:var(--dark-secondary);
+    text-align:center;
+}
+.text-label-button{
+    font-size: 180%;
+    font-family: Tahoma, sans-serif;
+    font-weight:bold;
+    color:var(--text-main)
 }

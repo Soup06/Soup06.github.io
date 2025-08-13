@@ -326,6 +326,7 @@ function displayReview(textData){
 
 //Destroys and then remakes all the reviews
 function displayAllReviews(subjectObject) {
+    
     //Deletes all the reviews for the popup
     let deleteReviews = document.querySelectorAll(".review-individual")
     deleteReviews.forEach((el) => {
