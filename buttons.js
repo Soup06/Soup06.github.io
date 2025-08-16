@@ -1,8 +1,11 @@
+import { displays, shuffle, openPopup } from './sharefn.js';
+
 let darkModeSwitch = document.getElementById("theme-switch");
 let luckyButton = document.getElementById("random-display-button");
 let editorPageButton = document.getElementById("editor-page-button");
 let crashButton = document.getElementById("crash-button");
 let homeButton = document.getElementById("main-menu-button");
+let displayKeys = null
 
 
 
@@ -36,12 +39,12 @@ if (darkModeSwitch){
 if (luckyButton){
     //Opens popup with a random display
     luckyButton.addEventListener('click', () => {
-    //Finds all the displays in object display
-    displayKeys = Object.keys(displays)
+        //Finds all the displays in object display
+        displayKeys = Object.keys(displays)
 
-    //Shuffles display
-    shuffle(displayKeys)
-    openPopup(displays[displayKeys[0]])
+        //Shuffles display
+        shuffle(displayKeys)
+        openPopup(displays[displayKeys[0]])
     });
 }
 

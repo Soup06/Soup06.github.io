@@ -1,4 +1,4 @@
-import { writeDatabase, readDatabase, createScene } from './dataBase.js';
+import { writeDatabase, readDatabase, createScene, storeImage } from './dataBase.js';
 
 
 let createTabButton = document.getElementById("create-tab");
@@ -12,11 +12,14 @@ let titleInput = document.getElementById("title-input");
 let nicknameInput = document.getElementById("nickname-input");
 let headImg = document.getElementById("head-img")
 let fileInput = document.getElementById("file-input")
+let deleteButton = document.getElementById("tab-delete")
 let currentTab = "data0"
 let oldTab = "data0"
 let unknownTabTitle = "(Untitled)"
 let saveKey = ""
 let allTabs = null
+let savedImage = null
+let delTab = null
 
 let data = {
     /*info1: {
@@ -79,7 +82,14 @@ function deleteTab(tabDel){
     dataTabs = Object.keys(data)
     delTab = dataTabs[0]
     currentTab=dataTabs[0];
-    alert(currentTab)
+
+    let tab = data[currentTab]
+
+    //Shows the data for the new selected tab
+    headerInput.value = tab.header
+    bodyInput.value = tab.description
+
+    checkTabs()
 }
 
 //Correctly sets the title of every tab to the heading of it's info
@@ -149,6 +159,7 @@ function submitCreator(){
         tags: ["planet","space","life","environment","biosphere","resources","solar system","science","nature","astronomy"]
     }
     createScene(displayNew)
+    window.location.href="index.html"
 }
 
 //Creates a new tab on click of the tab button
@@ -177,8 +188,20 @@ headerInput.addEventListener("blur", () => {
     updateTabTitles()
 });
 
+//Checks when the headerInput bar looses focus, and updates the tab titles
+deleteButton.addEventListener("click", () => {
+    deleteTab(currentTab)
+});
+
 fileInput.onchange = function() {
-    headImg.src = "`${URL.createObjectUrl(fileInput.files[0])}`"
+    let savedImage = fileInput.files[0]
+    if (savedImage){
+        let savedUrl = URL.createObjectURL(savedImage);
+        headImg.src = savedUrl
+        storeImage(savedImage).then(url => {
+            alert("Uploaded! URL: " + url);
+        })
+    }
 }
 
 

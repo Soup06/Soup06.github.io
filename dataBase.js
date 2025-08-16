@@ -2,6 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
 import { getDatabase, ref, set, get, child, push, update } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+import { getStorage, ref as imageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -39,9 +40,9 @@ function writeDatabase(location, input){
 
 //Obtains a value from the database
 async function readDatabase(location){
-    const snapshot = await get(child(ref(db), location))
-    if (snapshot.exists()) {
-        const thing = snapshot.val()
+    const item = await get(child(ref(db), location))
+    if (item.exists()) {
+        const thing = item.val()
         console.log("Data from DB:", thing);
         return thing
         
@@ -69,6 +70,19 @@ function createScene(value){
     
     set(newReview, value)
     .then(() => console.log("Review logged"))
+}
+
+function storeImage(file){
+    const storage=getStorage();
+    const storagePlace = imageRef(storage, 'displays/' + file.name);
+
+    return uploadBytes(storagePlace, file)
+    .then(item => {
+        return getDownloadURL(item.ref);
+    }).then(url => {
+        console.log("Image URL:", url);
+        return url;
+    })
 }
 
 
@@ -232,4 +246,4 @@ let stuff = {
 //writeDatabase("entries/display00", "Holla")
 
 
-export {writeDatabase, readDatabase, setReview, createScene}
+export {writeDatabase, readDatabase, setReview, createScene, storeImage}

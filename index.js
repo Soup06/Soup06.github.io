@@ -1,35 +1,21 @@
 import { writeDatabase, readDatabase, setReview } from './dataBase.js';
 import { ref, push } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+import { shuffle, openPopup, closePopup, displayText, checkPopupTabs, displayNewScene, displayAllScenes, enterSearchQuery, displayReview, displayAllReviews, submitReview } from './sharefn.js'
 
 
 //Find elements
 let popup = document.getElementById("popup");
-let popupBody = document.getElementById("popup-body"); 
-let popupBodyHeader = document.getElementById("popup-body-header");
-let popupBodyDescription = document.querySelector(".popup-body-description");
-let btn = document.getElementsByClassName("scene-view-flex-box");
 let dimmer = document.getElementById("dimmer");
-let closeBtn = document.getElementById("close-popup");
-let popupHeadImg = document.getElementById("image-display");
-let popupTabs = document.getElementById("tab-bar");
-let popupTabsAll = document.querySelectorAll(".popup-tab");
 let searchButton = document.getElementById("submitButton");
 let searchBar = document.getElementById("searchField");
-let birthdayField = document.getElementById("popup-birthday");
-let parentsField = document.getElementById("popup-parents");
 let closePopupButton = document.getElementById("close-popup");
-let mainArea = document.querySelector(".section-layer");
 let starSelectors = document.querySelectorAll(".star-selector");
 let reviewSubmitButton = document.getElementById("review-submit");
-let reviewInputBox = document.getElementById("review-input");
 
-//Used for reviews
-let starRating = undefined;
-//Current data used for display
-let currentDisplay = 0;
-let currentDisplayKey = 0;
+let starRating = undefined
 
 let displays = {}
+
 
 
 
@@ -39,365 +25,6 @@ let displays = {}
 //Functions
 
 
-//Opens the popup window
-function openPopup(subjectObject, subjectKey) {
-
-    //Resets the review text
-    reviewInputBox.value = ""
-    starRating = undefined
-    starSelectors.forEach((a) => {
-        a.innerHTML = "&#x2606"
-    })
-    //alert(subjectObject)
-    let makeTabs = Object.keys(subjectObject.info)
-    currentDisplay = subjectObject
-    currentDisplayKey = subjectKey
-    //alert(currentDisplayKey)
-
-    dimmer.style.display = "block";
-    //dimmer.classList.add("dimmer-showing")
-    popup.classList.add("popup-showing")
-    popup.scrollTop = 0;
-    displayText(subjectObject.info[makeTabs[0]])
-    document.querySelector(".image-screen").src = subjectObject.img;
-    popupHeadImg.querySelector(".popup-image-text").innerHTML = subjectObject.title;
-    birthdayField.innerHTML = subjectObject.birthday;
-    parentsField.innerHTML = subjectObject.parents;
-
-    //Makes all the tabs
-    for (let j = 0; j < makeTabs.length; j ++){
-        //Create the tab and the text node inside
-        const createTab = document.createElement("div")
-        const createTabName = document.createTextNode("(empty)")
-
-        //Gives a class to the tab
-        createTab.classList.add("popup-tab")
-
-        //Sets id for the tab
-        //createTab.id = "popupTab"
-
-        //Attaches the text to the tab, and the tab to the tab bar
-        createTab.appendChild(createTabName)
-        popupTabs.appendChild(createTab)
-
-        //Object with all the data for the button
-        const objectData = subjectObject.info[makeTabs[j]]
-
-        //Changes whats written on the tab to be correct
-        createTab.innerHTML = /*makeTabs[j]*/objectData.header
-
-        createTab.id = objectData.header
-        
-        //Changes the description and heading on click of the tab
-        createTab.addEventListener("click", function(){ 
-            displayText(objectData)
-        })
-        
-    }          
-    
-    displayAllReviews(subjectObject)
-    checkPopupTabs()
-}
-
-//Closes the popup window
-function closePopup() {
-    currentDisplay = 0;
-
-    //Hides the popup and dimmer
-    dimmer.style.display = "none";
-    popup.classList.remove("popup-showing")
-
-    //dimmer.classList.remove("dimmer-showing")
-    //popup.style.display = "none";
-    
-
-
-    //Deletes all the tabs for the popup
-    let deleteTabs = document.querySelectorAll(".popup-tab")
-    deleteTabs.forEach((el) => {
-        el.remove()
-    })
-
-    //Deletes all the reviews for the popup
-    let deleteReviews = document.querySelectorAll(".review-individual")
-    deleteReviews.forEach((el) => {
-        el.remove()
-    })
-}
-
-//Changes the header and description within the popup
-function displayText(subject) {
-    popupBodyHeader.innerHTML = subject.header
-    popupBodyDescription.innerHTML = subject.description
-
-    checkPopupTabs()
-    
-}
-
-//Looks through the tabs, changes their colour when their description is being displayed
-function checkPopupTabs(){
-    let popupTabsAll = document.querySelectorAll(".popup-tab")
-    popupTabsAll.forEach((tab) => {
-        if (popupBodyHeader.innerHTML === tab.id) {
-            tab.classList.add("popup-tab-selected")
-        }
-        else{
-            tab.classList.remove("popup-tab-selected")
-        }
-    })
-}
-
-//Creates a new scene element using sceneData
-function displayNewScene(sceneData){
-    //Contains the object with all data for currently targeted button 
-    let displayData = displays[sceneData]  
-
-
-    //Create the elements for the scene
-    const createSceneSpace = document.createElement("div")
-    const createFlexBox = document.createElement("div")
-    const createImg = document.createElement("img")
-    const createSceneTextEl = document.createElement("div")
-    const createSceneTextNode = document.createTextNode("(No <br> title)")
-
-    //Append the children so we can have it in the right layout
-    createSceneSpace.appendChild(createFlexBox)
-    createFlexBox.appendChild(createImg)
-    createFlexBox.appendChild(createSceneTextEl)
-    createSceneTextEl.appendChild(createSceneTextNode)
-
-    //Add classes to everything
-    createSceneSpace.classList.add("scene-space")
-    createFlexBox.classList.add("scene-view-flex-box")
-    createImg.classList.add("scene-view-img")
-    createSceneTextEl.classList.add("scene-view-text")
-
-    //Change the id of things
-    createFlexBox.id = sceneData
-
-    //Insert the image
-    createImg.src = displayData.img
-
-    //Change the text on the title of scene
-    createSceneTextEl.innerHTML = displayData.buttonTitle
-
-    //Add the whole scene to the main area
-    mainArea.appendChild(createSceneSpace)
-    //On scene click, opens the popup
-    createFlexBox.addEventListener("click", function(){ 
-        //alert(displayData, sceneData)
-        openPopup(displayData, sceneData)
-    })
-}
-
-//Creates every scene that exists in a random order
-function displayAllScenes(){
-    //Delete all currently displayed scenes
-    while (mainArea.firstChild) {
-        mainArea.removeChild(mainArea.firstChild)
-    }
-
-    //Resets the search bar content
-    searchBar.value = ""
-
-    //Finds all the displays in object display
-    let displayKeys = Object.keys(displays)
-
-    //Shuffles display
-    shuffle(displayKeys)
-    
-    //Loops through the list and creates display
-    for (let i = 0; i < displayKeys.length; i ++){
-        displayNewScene(displayKeys[i])
-    }
-}
-
-//Enter key for search bar
-function enterSearchQuery(){
-    //If searchbar value isnt none
-    if (searchBar.value != "") {
-        //Delete all currently displayed scenes
-        while (mainArea.firstChild) {
-            mainArea.removeChild(mainArea.firstChild)
-        }
-
-        //SET VARIABLES
-
-        //Clears the results thing
-        let results = []
-        //Sets the var to the inputted value
-        let inputValue = searchBar.value.toLowerCase()
-        //All the items of the (displays) object
-        let allDisplays = Object.keys(displays)
-
-        //MAIN LOOP
-        
-        //Loops through all items in allDisplays
-        for (i=0; i < allDisplays.length; i ++){
-            //Variables
-            let targ = displays[allDisplays[i]]
-            let value = "o"
-            let array = targ.tags
-            //Lower case of the title
-            let targTitleLower = targ.title.toLowerCase() 
-
-            //If the currently targeted display matches the search function
-            //Adds it to the list to be created
-            if (targTitleLower === inputValue){
-                results.unshift(allDisplays[i])
-            } else if (targTitleLower.includes(inputValue)){
-                results.unshift(allDisplays[i])
-            }
-            else if (targ.tags.includes(inputValue)){
-                results.push(allDisplays[i])
-            }
-            
-        }
-        //Creates display for each object on list
-        for (let i = 0; i < results.length; i ++){
-            displayNewScene(results[i])
-        }
-    }
-    else {
-        displayAllScenes()
-    }
-}
-
-//Creates a review element in the review-section within popup
-function displayReview(textData){
-    //The space within popup for reviews
-    let reviewSection = document.getElementById("review-section")
-
-    //Create the elements for the scene
-    const createReviewWhole = document.createElement("div")
-    const createTopFlexBox = document.createElement("div")
-    const createReviewStars = document.createElement("div")
-    const createReviewName = document.createElement("div")
-    const createReviewTextArea = document.createElement("div")
-
-    //Create the text nodes for the elements
-    const createStarsText = document.createTextNode("(No stars)")
-    const createTitleText = document.createTextNode("(No Reviewer)")
-    const createReviewText = document.createTextNode("(No Review)")
-
-    //Append the children so we can have it in the right layout
-    createReviewWhole.appendChild(createTopFlexBox)
-    createReviewWhole.appendChild(createReviewTextArea)
-    createTopFlexBox.appendChild(createReviewStars)
-    createTopFlexBox.appendChild(createReviewName)
-
-    //Add the text nodes to everything
-    createReviewStars.appendChild(createStarsText)
-    createReviewName.appendChild(createTitleText)
-    createReviewTextArea.appendChild(createReviewText)
-
-    //Add classes
-    createReviewWhole.classList.add("review-individual")
-    createTopFlexBox.classList.add("review-top-flex-box")
-    createReviewStars.classList.add("review-stars")
-    createReviewName.classList.add("review-name")
-    createReviewTextArea.classList.add("review-text")
-
-    //Change id's
-    createReviewStars.id = "review-stars"
-
-    //Change the text on the review
-    createReviewName.innerHTML = textData.reviewer
-    createReviewTextArea.innerHTML = textData.review
-
-    if (createReviewTextArea.innerHTML == ""){
-        createReviewTextArea.innerHTML = "-No review-"
-    }
-
-    //Turn stars (number) into text
-    let stars = ""
-    for (let j = 1; j <= 5; j ++){
-        if (j <= textData.stars) {
-            stars += "&#9733"
-        } else {
-            stars += "&#x2606"
-        }
-    }
-    createReviewStars.innerHTML = stars
-
-    //Add the whole scene to the main area
-    reviewSection.appendChild(createReviewWhole)
-}
-
-//Destroys and then remakes all the reviews
-function displayAllReviews(subjectObject) {
-    
-    //Deletes all the reviews for the popup
-    let deleteReviews = document.querySelectorAll(".review-individual")
-    deleteReviews.forEach((el) => {
-        el.remove()
-    })
-
-    //Creates all the reviews for the popup
-    let makeReviews = Object.keys(subjectObject.reviews)
-    if (makeReviews.length < 1){
-        reviewInputBox.placeholder = "Be the first one to review this topic"
-    }
-    else{
-        
-        reviewInputBox.placeholder = "Your thoughts on this topic"
-    }
-    for (let j = 0; j < makeReviews.length; j ++){
-            
-        //Object with all the data for the review
-        const reviewData = subjectObject.reviews[makeReviews[j]]
-        //Create the review
-        displayReview(reviewData)
-    }
-}
-
-//Submits the review using current text and star rating
-function submitReview() {
-    //Only submits if a star rating is given
-    if (starRating !== undefined) {
-        const reviewKeys = Object.keys(currentDisplay.reviews);
-        const nextReview = reviewKeys.length + 1;
-        const nextReviewKey = `review${nextReview}`;
-
-        //Adds the review to the object        
-        setReview(currentDisplayKey, starRating, reviewInputBox.value)
-
-        currentDisplay.reviews[nextReviewKey] = {
-            reviewer:"You",
-            stars:starRating,
-            review:reviewInputBox.value,
-        }
-
-        //Reset star rating and review
-        starRating = undefined;
-        reviewInputBox.value = ""
-        //Visually reset star rating
-        starSelectors.forEach((a) => {
-            a.innerHTML = "&#x2606"
-        })
-
-        //Reset the reviews to show your one
-        displayAllReviews(currentDisplay)
-    }
-    
-}
-
-//Shuffles an array (copied from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array)
-function shuffle(array) {
-    let currentIndex = array.length;
-
-    // While there remain elements to shuffle...
-    while (currentIndex != 0) {
-
-        // Pick a remaining element...
-        let randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        // And swap it with the current element.
-        [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
-    }
-}
 
 
 //________________________________________________________
@@ -550,103 +177,11 @@ const displaysBuiltin= {
 }*/
 
 
-//________________________________________________________
-
-//Elements
-
-//Creates a new scene with the id of (buttonId)
-/*function displayNewScene(buttonId){
-
-    //Get the main area for creating scenes
-    let mainArea = document.querySelector(".section-layer")
-
-    //Create the elements for the scene
-    const createSceneSpace = document.createElement("div")
-    const createFlexBox = document.createElement("div")
-    const createImg = document.createElement("img")
-    const createSceneTextEl = document.createElement("div")
-    const createSceneTextNode = document.createTextNode("(No <br> title)")
-
-    //Append the children so we can have it in the right layout
-    createSceneSpace.appendChild(createFlexBox)
-    createFlexBox.appendChild(createImg)
-    createFlexBox.appendChild(createSceneTextEl)
-    createSceneTextEl.appendChild(createSceneTextNode)
-
-    //Add classes to everything
-    createSceneSpace.classList.add("scene-space")
-    createFlexBox.classList.add("scene-view-flex-box")
-    createImg.classList.add("scene-view-img")
-    createSceneTextEl.classList.add("scene-view-text")
-
-    //Change the id of things
-    createFlexBox.id = buttonId
-
-    //Add the whole scene to the main area
-    mainArea.appendChild(createSceneSpace)
-}*/
-
-
-
 
 //________________________________________________________
 
 
-//Creates all the displays
 
-
-//Same as full code, but using the function
-
-//Creates every display that exists
-
-
-//Full code
-/*
-displayKeys = Object.keys(displays)
-for (let i = 0; i < displayKeys.length; i ++){
-
-    //Contains the object with all data for currently targeted button 
-    let displayData = displays[displayKeys[i]]  
-
-    //Get the main area for creating scenes
-    let mainArea = document.querySelector(".section-layer")
-
-    //Create the elements for the scene
-    const createSceneSpace = document.createElement("div")
-    const createFlexBox = document.createElement("div")
-    const createImg = document.createElement("img")
-    const createSceneTextEl = document.createElement("div")
-    const createSceneTextNode = document.createTextNode("(No <br> title)")
-
-    //Append the children so we can have it in the right layout
-    createSceneSpace.appendChild(createFlexBox)
-    createFlexBox.appendChild(createImg)
-    createFlexBox.appendChild(createSceneTextEl)
-    createSceneTextEl.appendChild(createSceneTextNode)
-
-    //Add classes to everything
-    createSceneSpace.classList.add("scene-space")
-    createFlexBox.classList.add("scene-view-flex-box")
-    createImg.classList.add("scene-view-img")
-    createSceneTextEl.classList.add("scene-view-text")
-
-    //Change the id of things
-    createFlexBox.id = displayKeys[i]
-
-    //Insert the image
-    createImg.src = displayData.img
-
-    //Change the text on the title of scene
-    createSceneTextEl.innerHTML = displayData.buttonTitle
-
-    //Add the whole scene to the main area
-    mainArea.appendChild(createSceneSpace)
-    
-    //On scene click, opens the popup
-    createFlexBox.addEventListener("click", function(){ 
-        openPopup(displayData)
-    })
-}*/
 
 //Event listeners
 
@@ -674,15 +209,9 @@ closePopupButton.addEventListener('click', () => {
     closePopup()
 })
 
-//Submit button on reviews
-reviewSubmitButton.addEventListener('click', () => {
-    submitReview()
-})
-
 dimmer.addEventListener('click', () => {
     closePopup()
 })
-
 
 //Lets you select star rating on reviews
 starSelectors.forEach((select, index) => {
@@ -724,6 +253,11 @@ let openExplaination={
     tags: ["place","New Zealand","national park","UNESCO","nature","hiking","fjords","wildlife","adventure","ecotourism","landscape"]
 }
 
+//Submit button on reviews
+reviewSubmitButton.addEventListener('click', () => {
+    submitReview(starRating)
+})
+
 //writeDatabase("displays", displays)
 
 
@@ -736,3 +270,5 @@ readDatabase("displays").then(data => {
 })
 
 openPopup(openExplaination)
+
+export{ displays, shuffle, openPopup }
