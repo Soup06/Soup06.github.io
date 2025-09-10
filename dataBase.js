@@ -52,12 +52,12 @@ async function readDatabase(location){
     }
 }
 
-function setReview(location, starNumber, reviewText){
+function setReview(location, starNumber, reviewText, date){
     const reviewsRef = ref(db, /*"displays/display1*/`displays/${location}/reviews`)
     const newReview = push(reviewsRef)
     
     set(newReview, {
-        reviewer:"You",
+        reviewer:date,
         stars:starNumber,
         review:reviewText,
     })
@@ -233,7 +233,7 @@ let stuff = {
             reviewer: "New Person",
             stars: 5,
             review: "Nice!"
-        }
+        }😀
     }
 });*/
 //createScene(displayNew)

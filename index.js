@@ -1,6 +1,6 @@
 import { writeDatabase, readDatabase, setReview } from './dataBase.js';
 import { ref, push } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
-import { shuffle, openPopup, closePopup, displayText, checkPopupTabs, displayNewScene, displayAllScenes, enterSearchQuery, displayReview, displayAllReviews, submitReview } from './sharefn.js'
+import { shuffle, openPopup, closePopup, displayText, checkPopupTabs, displayNewScene, displayAllScenes, enterSearchQuery, displayReview, displayAllReviews, submitReview, swearCheck, showNotification } from './sharefn.js'
 
 
 //Find elements
@@ -235,7 +235,7 @@ let openExplaination={
     parents: "Soup06",
     info: {
         info1: {
-        header: "Welcome",
+        header: "Quick tip",
         description: "This is the Archive of <strong>Aleatoria</strong>. <br> Here you can discover new hobbies, entertainment, locations, and anything else."
         },
         info2: {

@@ -1,4 +1,5 @@
 import { writeDatabase, readDatabase, setReview } from './dataBase.js';
+import { bannedWords } from './swears.js'; 
 import { ref, push } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
 let popupBody = document.getElementById("popup-body"); 
@@ -16,6 +17,12 @@ let mainArea = document.querySelector(".section-layer");
 let starSelectors = document.querySelectorAll(".star-selector");
 let searchBar = document.getElementById("searchField");
 let reviewSubmitButton = document.getElementById("review-submit");
+let reviewersText = document.getElementById("reviewers-quantity");
+let reviewRatingAverage = document.getElementById("review-avg-number");
+let reviewStarsAverage = document.getElementById("review-avg-stars");
+let popupScrollSection = document.getElementById("popup-scrollable");
+let editorMain = document.getElementById("editor-main-page");
+let notifArea = document.getElementById("notif-area")
 
 //Used for reviews
 let starRating = undefined;
@@ -25,8 +32,10 @@ let currentDisplayKey = 0;
 
 let displays = {}
 
+//Testing banned word list
+//let bannedWords = ["word", "horse"]
 
-//Shuffles an array (copied from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array)
+//Shuffles an array 
 function shuffle(array) {
     let currentIndex = array.length;
 
@@ -61,7 +70,7 @@ function openPopup(subjectObject, subjectKey) {
     dimmer.style.display = "block";
     //dimmer.classList.add("dimmer-showing")
     popup.classList.add("popup-showing")
-    popup.scrollTop = 0;
+    popupScrollSection.scrollTop = 0;
     displayText(subjectObject.info[makeTabs[0]])
     document.querySelector(".image-screen").src = subjectObject.img;
     popupHeadImg.querySelector(".popup-image-text").innerHTML = subjectObject.title;
@@ -98,12 +107,25 @@ function openPopup(subjectObject, subjectKey) {
         })
         
     }          
+
+    //Shows all the reviews if there are any
     if ("reviews" in subjectObject) {
         console.log("reviews found")
+
+        //Creates all the reviews
         displayAllReviews(subjectObject)
-    } else {
+
+        loadReviewStats(subjectObject)
+        
+
+        //alert(reviewsAverage)
+
+    } else { //when there are no reviews
         console.log("no reviews found")
+        reviewersText.innerHTML = "No reviewers. Be the first!"
     }
+
+
     checkPopupTabs()
 }
 
@@ -256,8 +278,10 @@ function enterSearchQuery(){
             } else if (targTitleLower.includes(inputValue)){
                 results.unshift(allDisplays[i])
             }
-            else if (targ.tags.includes(inputValue)){
-                results.push(allDisplays[i])
+            else if (targ.tags){
+                if (targ.tags.includes(inputValue)){
+                    results.push(allDisplays[i])
+                }
             }
             
         }
@@ -309,6 +333,7 @@ function displayReview(textData){
     //Change id's
     createReviewStars.id = "review-stars"
 
+    
     //Change the text on the review
     createReviewName.innerHTML = textData.reviewer
     createReviewTextArea.innerHTML = textData.review
@@ -360,41 +385,148 @@ function displayAllReviews(subjectObject) {
 }
 //Submits the review using current text and star rating
 function submitReview(stars) {
-    //Only submits if a star rating is given
-    if (stars !== undefined) {
-        let nextReviewKey;
+    let textClean = swearCheck([reviewInputBox.value])
+    if (textClean){
 
-        if ("reviews" in currentDisplay){
-            const reviewKeys = Object.keys(currentDisplay.reviews);
-            const nextReview = reviewKeys.length + 1;
-            nextReviewKey = `review${nextReview}`;
-        } else {
-            nextReviewKey = "review1"
+        //Only submits if a star rating is given
+        if (stars !== undefined) {
+            let nextReviewKey;
+            const d = new Date();
+            const date = d.getDate() +"/"+ (d.getMonth()+1) +"/"+ d.getFullYear();
+            
+            if ("reviews" in currentDisplay){
+                const reviewKeys = Object.keys(currentDisplay.reviews);
+                const nextReview = reviewKeys.length + 1;
+                nextReviewKey = `review${nextReview}`;
+            } else {
+                nextReviewKey = "review1"
+            }
+
+            //Adds the review to the object        
+            setReview(currentDisplayKey, stars, reviewInputBox.value, date)
+
+            if  (currentDisplay.reviews){
+            } else{
+                currentDisplay.reviews = {}
+            }
+                currentDisplay.reviews[nextReviewKey] = {
+                    reviewer:date,//"You",
+                    stars:stars,
+                    review:reviewInputBox.value,
+                }
+
+            //Reset star rating and review
+            stars = undefined;
+            reviewInputBox.value = ""
+            //Visually reset star rating
+            starSelectors.forEach((a) => {
+                a.innerHTML = "&#x2606"
+            })
+
+            //Reset the reviews to show your one
+            displayAllReviews(currentDisplay)
         }
-
-        //Adds the review to the object        
-        setReview(currentDisplayKey, stars, reviewInputBox.value)
-
-        currentDisplay.reviews[nextReviewKey] = {
-            reviewer:"You",
-            stars:stars,
-            review:reviewInputBox.value,
-        }
-
-        //Reset star rating and review
-        stars = undefined;
-        reviewInputBox.value = ""
-        //Visually reset star rating
-        starSelectors.forEach((a) => {
-            a.innerHTML = "&#x2606"
-        })
-
-        //Reset the reviews to show your one
-        displayAllReviews(currentDisplay)
     }
-    
 }
 
+//Displays the reviews overall stats, like average stars and reviewers
+function loadReviewStats(subjectObject) {
+        //Displays the total reviews
+        let allReviews = Object.keys(subjectObject.reviews)
+        let reviewsNumber = allReviews.length
+        let reviewSelectedStars;
+        if (reviewsNumber > 1){
+            reviewersText.innerHTML = `${reviewsNumber} total reviews`
+        } else if (reviewsNumber === 0){
+            reviewersText.innerHTML = "No reviewers. Be the first!"
+        } else if (reviewsNumber === 1) {
+            reviewersText.innerHTML = `Only ${reviewsNumber} review so far`
+        }
+
+        //Gets the average review stars
+        let reviewSelected = null
+        let reviewsTotalStars = 0
+        //Loops through each review, adds its stars to a total
+        for (let i = 0; i < reviewsNumber; i += 1) {
+            reviewSelectedStars = subjectObject.reviews[allReviews[i]].stars
+            reviewsTotalStars += reviewSelectedStars
+        }
+        //Gets the average of the total
+        let reviewsAverage = Math.round((reviewsTotalStars/reviewsNumber)*10)/10
+
+        //Displays the average rating as a number
+        if (reviewsNumber >= 1){
+            reviewRatingAverage.innerHTML = `${reviewsAverage} <small>Stars overall</small>`
+        } else {
+            reviewRatingAverage.innerHTML = "No reviews"
+        }
+        
+        let stars = ""
+        for (let j = 1; j <= 5; j ++){
+            if (j <= reviewsAverage) {
+                stars += "&#9733"
+            } else {
+                stars += "&#x2606"
+            }
+        }
+
+        if (reviewsNumber >= 1){
+            reviewStarsAverage.innerHTML = stars
+        } else if (reviewsNumber === 0){
+            reviewStarsAverage.innerHTML = "&#x2606&#x2606&#x2606&#x2606&#x2606"
+        } 
+}
+
+
+function showNotification(head, body){
+    const notif = document.createElement("div")
+    const notifHead = document.createElement("div")
+    const TextElHead = document.createTextNode("Head")
+    const notifBody = document.createElement("div")
+    const TextElBody = document.createTextNode("Body")
+    const notifHeadFlex = document.createElement("div")
+    const notifClose = document.createElement("div")
+    const notifCloseText = document.createTextNode("X")
+
+    notif.appendChild(notifHeadFlex)
+    notif.appendChild(notifBody)
+    notifHeadFlex.appendChild(notifHead)
+    notifHeadFlex.appendChild(notifClose)
+    notifClose.appendChild(notifCloseText)
+    notifHead.appendChild(TextElHead)
+    notifBody.appendChild(TextElBody)
+
+    notifHeadFlex.classList.add("general-flex")
+    notifClose.classList.add("notification-close")
+    notifHead.classList.add("notification-header")
+    notifBody.classList.add("notification-body")
+    notif.classList.add("notification-card")
+    notifArea.appendChild(notif)
+
+    notifHead.innerHTML = head
+    notifBody.innerHTML = body
+
+    notifClose.addEventListener("click", () => {
+        //document.getElementById()
+        notif.remove()
+    });
+}
+
+function swearCheck(input){
+    for (let j = 0; j < input.length; j ++) {
+        let currentVal = input[j]
+        for (let i = 0; i < bannedWords.length; i ++) {
+            if ((typeof currentVal) == "string"){
+                if (currentVal.toLowerCase().includes(bannedWords[i])) {
+                    console.log("Bad words")
+                    showNotification("Innapropriate word usage!", `You have attempted to submit text containing innapropriate words or phrases. Please only post content that is appropriate for all ages.<br><strong>Word used: ${bannedWords[i]}</strong>.`)
+                    return false
+                }
+            }
+        }
+    }
+    return true
+}
 
 
 //Sets up the page on entry
@@ -405,4 +537,4 @@ readDatabase("displays").then(data => {
 })
 
 
-export { displays, shuffle, openPopup, closePopup, displayText, checkPopupTabs, displayNewScene, displayAllScenes, enterSearchQuery, displayReview, displayAllReviews, submitReview }
+export { displays, swearCheck, showNotification, shuffle, openPopup, closePopup, displayText, checkPopupTabs, displayNewScene, displayAllScenes, enterSearchQuery, displayReview, displayAllReviews, submitReview }

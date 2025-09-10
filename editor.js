@@ -1,4 +1,5 @@
 import { writeDatabase, readDatabase, createScene, storeImage } from './dataBase.js';
+import { showNotification, swearCheck } from './sharefn.js';
 
 
 let createTabButton = document.getElementById("create-tab");
@@ -13,6 +14,13 @@ let nicknameInput = document.getElementById("nickname-input");
 let headImg = document.getElementById("head-img")
 let fileInput = document.getElementById("file-input")
 let deleteButton = document.getElementById("tab-delete")
+let tagsInput = document.getElementById("input-tags")
+let tagsOutput = document.getElementById("output-tags")
+let tagsButton = document.getElementById("button-tags")
+let imagePreview = document.getElementById("image-preview")
+let imageAdressPaste = document.getElementById("image-adress-paste")
+let editorMain = document.getElementById("editor-main-page")
+
 let currentTab = "data0"
 let oldTab = "data0"
 let unknownTabTitle = "(Untitled)"
@@ -27,6 +35,7 @@ let data = {
         description: ""
     },*/
 }
+
 
 let dataTabs = Object.keys(data)
 
@@ -147,18 +156,35 @@ function checkTabs(){
 
 //Submits all the data inside the creator
 function submitCreator(){
+
+    //--Gets the tags list
+    let searchQuery = tagsInput.value;
+    let tagsList = searchQuery.match(/[^,\s?]+/g)//(/([abcdefghijklmnopqrstuvwxyz1234567890-]|,)+/)
+    //tagsOutput.innerHTML = tagsList;
+    console.log(typeof(tagsList))
+    
+    var birthdayValue = "Unknown"
+    
+    if (birthdayInput.value != ""){
+        birthdayValue = birthdayInput.value
+    }
+
+    //Creates an object containing all the requried data
     const displayNew = {
         buttonTitle:nicknameInput.value,
         title:titleInput.value,
-        img:"images/earth.jpeg",
-        birthday:birthdayInput.value,
+        img:imageAdressPaste.value,
+        birthday:birthdayValue,
         parents:parentsInput.value,
         info: data,
         reviews: {
         },
-        tags: ["planet","space","life","environment","biosphere","resources","solar system","science","nature","astronomy"]
+        tags: tagsList
     }
+
+    //Sends this display to the database
     createScene(displayNew)
+    //Goes to home page
     window.location.href="index.html"
 }
 
@@ -168,7 +194,15 @@ createTabButton.addEventListener('click', () => {
 })
 
 submitCreatorButton.addEventListener('click', () => {
-    submitCreator()
+    let dataToText = JSON.stringify(data);
+    console.log(dataToText)
+    let textClean = swearCheck([
+        nicknameInput.value, 
+        titleInput.value, 
+        parentsInput.value, 
+        tagsInput.value, 
+        dataToText])
+    ///if (textClean) {submitCreator()}
 })
 
 //Checks when the headerInput bar looses focus, and updates the tab titles
@@ -187,12 +221,23 @@ headerInput.addEventListener("blur", () => {
     //Updates the tab title text to match the correct data
     updateTabTitles()
 });
+bodyInput.addEventListener("blur", () => {
+    //Saves current text to the tab
+    saveTabData(currentTab)
+});
 
 //Checks when the headerInput bar looses focus, and updates the tab titles
 deleteButton.addEventListener("click", () => {
     deleteTab(currentTab)
 });
 
+imageAdressPaste.addEventListener('input',function(e){
+    imagePreview.src = imageAdressPaste.value
+});
+
+
+
+/*
 fileInput.onchange = function() {
     let savedImage = fileInput.files[0]
     if (savedImage){
@@ -202,8 +247,16 @@ fileInput.onchange = function() {
             alert("Uploaded! URL: " + url);
         })
     }
-}
+}*/
+/*
+tagsButton.addEventListener('click', () => {
+    let searchQuery = tagsInput.value;
+    let val = searchQuery.match(/[^,\s?]+/g)//(/([abcdefghijklmnopqrstuvwxyz1234567890-]|,)+/)
+    tagsOutput.innerHTML = val;
+    console.log(typeof(val))
+})*/
 
 
 createNewTab()
 checkTabs()
+showNotification("Publicity warning!", "On submition, all text written will be openly shared to public viewing. Users are able to use whatever information you share in any way they desire. <br><br>Please do not submit private information, or anything pottentially offensive. ")

@@ -31,7 +31,6 @@
             <!--Switches to editor page-->
             <div id="editor-page-button" style="border-right:0; margin-right:0;" class="page-header-button">Create</div>
             <div id="random-display-button" style="border-right:0; margin-right:0; margin-left:0;" class="page-header-button">Feeling Lucky</div>
-            <div id="crash-button" style="margin-left:0;" class="page-header-button">Crash</div>
             <div id="theme-switch" class="theme-switch-button">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
@@ -53,70 +52,86 @@
 
         <!--This is the Popup-->
         <div id="popup" class="popup">
+            <img class="image-screen" src="" alt="(no image)"></img>
 
-
-            <!--Image and overlay at top-->
-            <div class="flex-box" id="image-display">
-                <img class="image-screen" src="" alt="(no image)"></img>
-                <div class="image-fader"></div>
-                <div class="popup-image-text">Untitled</div>
-                <div class="close-popup-button" id="close-popup">Esc</div>
-            </div>
-
-
-            <!--Parents and birthday-->
-            <div class="popup-stats-flex-box">
-                <div class="popup-stats">
-                    <div class="popup-stats-heading">Parents</div>
-                    <div id="popup-parents" class="popup-stats-description">Unknown</div>
+            <div id="popup-scrollable" class="popup-scrollable">
+                <!--Image and overlay at top-->
+                <div class="flex-box" id="image-display">
+                    <div class="image-overlay"></div>
+                    <div class="popup-image-text">Untitled</div>
+                    <div class="close-popup-button" id="close-popup">Esc</div>
                 </div>
-                <div class="popup-stats">
-                    <div class="popup-stats-heading">Birthday</div>
-                    <div id="popup-birthday" class="popup-stats-description">Unknown</div>
-                </div>
-            </div>
-
-
-            <!--Main description-->
-            <div id="tab-bar" class="popup-tab-bar-flex-box"></div>
-            <div class="popup-body" id="popup-body">
-                <div id="popup-body-header" class="popup-body-header">
-                    It seems there is no header
-                </div>
-                <div class="popup-body-description" id="popup-body-description">
-                    It seems there is no description
-                </div>
-            </div>
-
-
-            <!--Reviews-->
-            <div class="review-area-header">Reviews</div>
-            
-            <!--The review creator-->
-            <div class="review-create">
-                <div class="review-create-flex-box">
-
-                    <div class="star-selector-wrapper">
-                        <div class="star-selector" id="1">&#x2606</div>
-                        <div class="star-selector" id="2">&#x2606</div>
-                        <div class="star-selector" id="3">&#x2606</div>
-                        <div class="star-selector" id="4">&#x2606</div>
-                        <div class="star-selector" id="5">&#x2606</div>
+                <div class="popup-main-section">
+                    <!--Parents and birthday-->
+                    <div class="popup-stats-flex-box">
+                        <div class="popup-stats">
+                            <div class="popup-stats-heading">Parents</div>
+                            <div id="popup-parents" class="popup-stats-description">Unknown</div>
+                        </div>
+                        <div class="popup-stats">
+                            <div class="popup-stats-heading">Birthday</div>
+                            <div id="popup-birthday" class="popup-stats-description">Unknown</div>
+                        </div>
                     </div>
 
-                    <div id="review-submit" class="review-submit-button">Submit</div>
-                </div>
-                <input class="review-input" type="text" id="review-input" name="review-input" placeholder="Your thoughts on this topic" value="">
-            </div>
 
-            <!--All the reviews-->
-            <div id="review-section" class="review-area-flex-box">
-                <!--
-                Here goes all of the reviews
-                they get created in <script>
-                -->
+                    <!--Main description-->
+                    <div id="tab-bar" class="popup-tab-bar-flex-box"></div>
+                    <div class="popup-body" id="popup-body">
+                        <div id="popup-body-header" class="popup-body-header">
+                            It seems there is no header
+                        </div>
+                        <div class="popup-body-description" id="popup-body-description">
+                            It seems there is no description
+                        </div>
+                    </div>
+
+
+                    <!--Reviews-->
+                    <div class="review-area-header">Reviews</div>
+                    
+                    <!--The review creator-->
+                    <div class="review-area-flex-box"> 
+                        <div class="review-stats-container">
+                            <div class="review-top-flex-box">
+                                <div id="review-avg-stars" class="review-stars">
+                                    AAA
+                                </div>
+                                <div id="review-avg-number" class="review-stats-head">
+                                    abc
+                                </div>
+                            </div>
+                            <div class="review-text" id="reviewers-quantity">a</div>
+                        </div>
+                    </div>
+
+                    <div class="review-create">
+                        <div class="review-create-flex-box">
+
+                            <div class="star-selector-wrapper">
+                                <div class="star-selector" id="1">&#x2606</div>
+                                <div class="star-selector" id="2">&#x2606</div>
+                                <div class="star-selector" id="3">&#x2606</div>
+                                <div class="star-selector" id="4">&#x2606</div>
+                                <div class="star-selector" id="5">&#x2606</div>
+                            </div>
+
+                            <div id="review-submit" class="review-submit-button">Submit</div>
+                        </div>
+                        <input class="review-input" type="text" id="review-input" name="review-input" placeholder="Your thoughts on this topic" value="">
+                    </div>
+
+                    <!--All the reviews-->
+                    <div id="review-section" class="review-area-flex-box">
+                        <!--
+                        Here goes all of the reviews
+                        they get created in <script>
+                        -->
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="notification-area" id="notif-area"></div>
 
     <!--Links the javascript files-->
     <script type="module" src="sharefn.js"></script>

@@ -29,7 +29,6 @@
             <div id="main-menu-button" class="page-header-button" style="border-left:0; margin-left:0; border-right:0; margin-right:0;">Main</div>
             <!--Switches to editor page-->
             <div id="editor-page-button" style="margin-left:0; border-right:0; margin-right:0;" class="page-header-button">Create</div>
-            <div id="crash-button" style="margin-left:0;" class="page-header-button">Crash</div>
             <div id="theme-switch" class="theme-switch-button">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
@@ -37,36 +36,61 @@
         </div>
 
 
-        <div class="editor-main">
-        
-            <div class="generic-flex">
-                <img src="" id="head-img">
-                <input type="file" accept="image/jpeg, image/png, image/jpg" id="file-input">
+        <div class="editor-main" id="editor-main-page">
+            <div class="top-area">
+                <img id="image-preview" alt="" class="image-preview-box" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAAAMFBMVEXx8/XCy9K/yND09vfw8vTP1tzp7O/i5ure4+fO1dvJ0dfT2d/EzNPt7/Lb4OXo6+4FeM7UAAAFL0lEQVR4nO2c24KrIAxFLdha7///t0dxOlWDSiAKztnrbR4G6SoJBKHZA6zJYncgQeCEAicUOKHACQVOKHBCgRMKnFDghAInFDihwAkFTihwQoETCpxQ4IQCJxQ4ocAJBU4ocEKBEwqcUOCEAicUOKHACQVOKHBCgRMKnFDghAInFDihwAkFTihwQoETCpxQ4IQCJxQ4ocAJBU4ot3Oi1KMq64FnWTVq+EueWzlRquqKVn/J+/ezEfdyHydKPYtc62yF1m1Xymq5ixPVdDnx8eslf1eCVu7hRFXFppAfLW39kNJyByeqOTJirGTvRsbKDZyozsHIpKUQsZK8E1Vu55GTrKTuRL0ZRoyVLviZaTtRVctUMuaVOnCoJO1E1WwjxsorbGZO2Qk7br5WuhApKTvpfZWMy5WAoZKuk6b1NhI4VJJ10uRBSsas0ng+OlUnVaARw9NvqCTqRERJpt9eUtJ0IqPEN36SdNIIKRnIPeafFJ0Ep9c5mr+qTdFJ2CRMpLAn5fScqJeokrFWZkoRdaImwtpw2T9iSnnxuiDoRFXda6hK28JzWTA14ryBxKFlTT9iTlT1W57o3Lta96yED8krRieknCw/DDuEP1TnKBlgzMlCTtZDXr+8pIjOwitK5x7JOKFD3mukiE85ix45S5FxYll46prdiv8ekpsU19wv4kS9LV1ouQPlrPzKliIzTuw9YDYiVfgFSxFx8rR+wcyMomSX9HYpTjlFwonqrB3gBc/JyYQjRcRJYe8Ay4l9rMlLcVi8iTjp7Y/nOBHcMjngWEoi4+TUlcmKw9rnxHzCWMqeU/ltkB9JEZl3SusnYmwQn1fm2GgPeiOzZrM9WZfu/3/BNDznYATLOLENffep+JppeMZBMSZUF9N6ljFM7KF3qpTduBZyQj4W53XTiRsEm1L2dr2k9k9W9Rtjq2BrJj9Zyk7pI7bP9lw8kfH+4KIFLGF77Sa3R90Un0POvHNCcYzsLVMk9+2buni1bd9xjMSJHMPmjCz7zov/fidW5GQ7OS/2e8BoRrLtrBfXScTIMVLsk09cJxEjZ8I6+cR1EmG1tsRaDsZ0EjlyDL0leuxOpulD4JTALtfXORRbnqVO1LDOePdtpoclWPsqulL+wt0P0SNnxFKrrp2opmuXl+5OuHA3PSmByDGQ9ezSydYdM+ELd4YUIsdANnoWTva2RSUv3JlnJRE5I2RbY+6kee1+dTrrhC7cPTZeMUdivZnydaIc3tdqqWuI6USOYZlSfp0oxzVlJxNByUSOYZlSPk6cDzqEXy17JDTn/LBMKRlTSRZ4X2giep2zZnEwZHLiGjifFt6BTtKKHMMspUxO2BkvDzoDm1jkGGa7bsaJx0t9XfgrOfuMlhezwsc48RrKufvhyiXXHatg8T2Zkm0eHzluxO8W4pXHKljkXycBt3h9blFdeqyCx2fPOguLbn6qTWsBu+Czxs/CopsdP4kmkx+mcZ8FRrfuWUqSTSYT005keDucW4iXnzRhMg17iYacC6A0VyZzzIQs0pBrUrn22JoXY4Us0pDjaZMzb+dIMX6/Qi0dHSU0XHySz48heqSaOs60vsvlq2mtpzj9OCh/Trgjew7afgLar63d6ec2SmTZm37+UyV7048K+Gmkm7O10A/8aaSbY7sEr8rYvYoNnX4Sr3EuYJVpVc35Ccu/innZbryMJ1n4v9f4N9FZ39XPZ931GYzMGH9VPHYfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADp8Q9+nG9anuOrfAAAAABJRU5ErkJggg==">
+                <!--<div class="generic-flex">
+                    <img src="" id="head-img">
+                    <input type="file" accept="image/jpeg, image/png, image/jpg" id="file-input">
+                </div>-->
+                <div class="generic-container">
+                    <div class="generic-flex">
+                        <div class="text-label-button"><small><em>(Overlays image in popup)</em></small></div>
+                    </div>
+                    <div class="generic-flex">
+                        <textArea class="text-input-title" id="title-input" placeholder="Title" maxlength="28"></textArea>
+                    </div>
+                    <div class="generic-flex">
+                        <div class="text-label-button"><small><em>(Overlays image in main page)</em></small></div>
+                    </div>
+                    <div class="generic-flex">
+                        <!--Put in main title and shortened title for button, then img upload-->
+                        <textArea class="button-head-text-input" id="nickname-input" placeholder="Title Nickname" maxlength="28"></textArea>
+                    </div>
+                    
+
+                
+
+                    <div class="generic-flex">
+                        <div class="text-label-small">
+                            Image<br><em>(Copy + paste image adress)</em>
+                        </div>
+                    </div>
+                    <div class="generic-flex">
+                        
+                    </div>
+                    <div class="generic-flex">
+                        <input type="text" class="button-head-text-input" id="image-adress-paste"></input>
+                    </div>
+                </div>
             </div>
-            <div class="generic-flex">
-                <div class="text-label-button"><small><em>(Overlays image in popup)</em></small></div>
-            </div>
-            <div class="generic-flex">
-                <textArea class="text-input-title" id="title-input" placeholder="Title" maxlength="28"></textArea>
-            </div>
-            <div class="generic-flex">
-                <div class="text-label-button"><small><em>(Overlays image in main page)</em></small></div>
-            </div>
-            <div class="generic-flex">
-                <!--Put in main title and shortened title for button, then img upload-->
-                <textArea class="button-head-text-input" id="nickname-input" placeholder="Title Nickname" maxlength="28"></textArea>
-            </div>
-            
 
 
             <div class="popup-stats-flex-box">
                 <div class="popup-stats">
-                    <div class="popup-stats-heading">Parents</div>
+                    <div class="popup-stats-heading tooltip-item">Parents
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
+                        <span class="tooltip-text">Parents, creators, or otherwise cause of existance</span>
+                    </div>
                     <textArea id="popup-parents-input" class="text-input-stats" placeholder="Parents/creator" maxlength="38"></textArea>
                 </div>
                 <div class="popup-stats">
-                    <div class="popup-stats-heading">Birthday</div>
-                    <textArea id="popup-birthday-input" class="text-input-stats" placeholder="DD Month YYYY" maxlength="12"></textArea>
+                    <div class="popup-stats-heading tooltip-item">Birthday
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
+                        <span class="tooltip-text">Date of birth, creation, or first existance</span>
+                    </div>
+                    <input type="date" class="text-input-stats" id="popup-birthday-input">
+                    <!--<textArea id="popup-birthday-input" class="text-input-stats" placeholder="DD Month YYYY" maxlength="12"></textArea>-->
                 </div>
             </div>
 
@@ -80,18 +104,29 @@
                 </div>
             </div>
             <div class="popup-body" id="popup-body">
+                <!--Header and body input-->
                 <textArea id="popup-header-input" class="text-input-header" placeholder="Header"></textArea>
                 <textArea id="popup-body-input" class="text-input-body" placeholder="Body text"></textArea>
+                <!--Input tags to search for with search bar on main page-->
+                <!--<div id="output-tags" class="">
+                    oo
+                </div>-->
+                <div class="text-label-small"><small>Tags- Seperate using "," <br>e.g. hobby, australian, old</small></div>
+                <textArea id="input-tags" class="tags-input" placeholder="clear keywords that define your display"></textArea>
+                <!--<div id="button-tags">Check</div>-->
+                <!--Deletes tab-->
                 <div class="tab-delete-button" id="tab-delete">Delete Tab</div>
             </div>
             <div class="submit-creator-flex">
                 <div>
                     Finished? >>>
                 </div>
-                <div class="submit-creator" id="submit-creator-button">
+                <div class="submit-creator" id="submit-creator-button" data-entrance="from-left">
                     Submit
                 </div>
             </div>
+
+            <div class="notification-area" id="notif-area"></div>
         </div>
         
 
