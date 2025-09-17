@@ -77,6 +77,17 @@ function openPopup(subjectObject, subjectKey) {
     birthdayField.innerHTML = subjectObject.birthday;
     parentsField.innerHTML = subjectObject.parents;
 
+    if (subjectObject.buttonTitle == "Archive$6841"){
+        let reviewSection = document.getElementById("review-bit")
+        let reviewflex = document.getElementsByClassName(".review-area-flex-box")
+        reviewSection.style.display = "none"
+    } else {
+        let reviewSection = document.getElementById("review-bit")
+        let reviewflex = document.getElementsByClassName(".review-area-flex-box")
+        reviewSection.style.display = "block"
+    }
+
+
     //Makes all the tabs
     for (let j = 0; j < makeTabs.length; j ++){
         //Create the tab and the text node inside
@@ -122,7 +133,15 @@ function openPopup(subjectObject, subjectKey) {
 
     } else { //when there are no reviews
         console.log("no reviews found")
-        reviewersText.innerHTML = "No reviewers. Be the first!"
+        if (subjectObject.buttonTitle == "Archive$6841"){
+            reviewersText.innerHTML = "You can't leave reviews here."
+        } else {
+            reviewersText.innerHTML = "No reviewers. Be the first!"
+
+        }
+        
+        reviewRatingAverage.innerHTML = "No reviews"
+        reviewStarsAverage.innerHTML = "&#x2606&#x2606&#x2606&#x2606&#x2606"
     }
 
 
@@ -269,18 +288,20 @@ function enterSearchQuery(){
             let value = "o"
             let array = targ.tags
             //Lower case of the title
-            let targTitleLower = targ.title.toLowerCase() 
+            if (targ.title){
+                let targTitleLower = targ.title.toLowerCase() 
 
-            //If the currently targeted display matches the search function
-            //Adds it to the list to be created
-            if (targTitleLower === inputValue){
-                results.unshift(allDisplays[i])
-            } else if (targTitleLower.includes(inputValue)){
-                results.unshift(allDisplays[i])
-            }
-            else if (targ.tags){
-                if (targ.tags.includes(inputValue)){
-                    results.push(allDisplays[i])
+                //If the currently targeted display matches the search function
+                //Adds it to the list to be created
+                if (targTitleLower === inputValue){
+                    results.unshift(allDisplays[i])
+                } else if (targTitleLower.includes(inputValue)){
+                    results.unshift(allDisplays[i])
+                }
+                else if (targ.tags){
+                    if (targ.tags.includes(inputValue)){
+                        results.push(allDisplays[i])
+                    }
                 }
             }
             
@@ -354,7 +375,12 @@ function displayReview(textData){
     createReviewStars.innerHTML = stars
 
     //Add the whole scene to the main area
-    reviewSection.appendChild(createReviewWhole)
+    if (reviewSection.hasChildNodes) {
+        let child = reviewSection.firstChild
+        reviewSection.insertBefore(createReviewWhole, child)
+    } else {
+        reviewSection.appendChild(createReviewWhole)
+    }
 }
 
 //Destroys and then remakes all the reviews
@@ -424,13 +450,15 @@ function submitReview(stars) {
             })
 
             //Reset the reviews to show your one
-            displayAllReviews(currentDisplay)
+            displayReview(currentDisplay.reviews[nextReviewKey])
+            //displayAllReviews(currentDisplay)
         }
     }
 }
 
 //Displays the reviews overall stats, like average stars and reviewers
 function loadReviewStats(subjectObject) {
+    console.log("Aaasdfa")
         //Displays the total reviews
         let allReviews = Object.keys(subjectObject.reviews)
         let reviewsNumber = allReviews.length
@@ -438,7 +466,11 @@ function loadReviewStats(subjectObject) {
         if (reviewsNumber > 1){
             reviewersText.innerHTML = `${reviewsNumber} total reviews`
         } else if (reviewsNumber === 0){
-            reviewersText.innerHTML = "No reviewers. Be the first!"
+            if (subjectObject.buttonTitle == "Archive$6841"){
+                reviewersText.innerHTML = "You can't leave reviews here."
+            } else {
+                reviewersText.innerHTML = "No reviewers. Be the first!"
+            }
         } else if (reviewsNumber === 1) {
             reviewersText.innerHTML = `Only ${reviewsNumber} review so far`
         }
@@ -456,8 +488,10 @@ function loadReviewStats(subjectObject) {
 
         //Displays the average rating as a number
         if (reviewsNumber >= 1){
+            console.log("B")
             reviewRatingAverage.innerHTML = `${reviewsAverage} <small>Stars overall</small>`
         } else {
+            console.log("A")
             reviewRatingAverage.innerHTML = "No reviews"
         }
         
@@ -478,7 +512,7 @@ function loadReviewStats(subjectObject) {
 }
 
 
-function showNotification(head, body){
+function showNotification(head, body, link=undefined, linkText=undefined){
     const notif = document.createElement("div")
     const notifHead = document.createElement("div")
     const TextElHead = document.createTextNode("Head")
@@ -505,6 +539,22 @@ function showNotification(head, body){
 
     notifHead.innerHTML = head
     notifBody.innerHTML = body
+
+    if (link != undefined){
+        var a = document.createElement('a');
+        a.setAttribute('href', link);
+        a.setAttribute('target', "_blank");
+        a.innerHTML = linkText;
+        
+        var b = document.createElement('a');
+        b.setAttribute('href', link);
+        b.setAttribute('target', "_blank");
+        b.innerHTML = "(link)";
+        
+        notifBody.appendChild(a)
+        notifHead.appendChild(b)
+    }
+
 
     notifClose.addEventListener("click", () => {
         //document.getElementById()

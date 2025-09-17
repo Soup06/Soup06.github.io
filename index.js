@@ -228,7 +228,7 @@ starSelectors.forEach((select, index) => {
 });
 
 let openExplaination={
-    buttonTitle: "Fiordland",
+    buttonTitle: "Archive$6841",
     title: "Archive of <br> Aleatoria",
     img: "images/earth.jpeg",
     birthday: "12 June 2023",
@@ -269,6 +269,10 @@ readDatabase("displays").then(data => {
     }
 })
 
-openPopup(openExplaination)
-
+if (window.localStorage.getItem("firstOpen") == null) {
+    openPopup(openExplaination)
+    window.localStorage.setItem("firstOpen", "nope")
+}
+//window.localStorage.removeItem("firstOpen")
+console.log("First open? " + window.localStorage.getItem("firstOpen"))
 export{ displays, shuffle, openPopup }
