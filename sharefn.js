@@ -483,6 +483,9 @@ function submitReview(stars) {
             //Reset the reviews to show your one
             displayReview(currentDisplay.reviews[nextReviewKey])
             //displayAllReviews(currentDisplay)
+            loadReviewStats(currentDisplay)
+        } else {
+            showNotification("Submission Error", "No star rating given. Please click on a star to give a rating.")
         }
     }
 }

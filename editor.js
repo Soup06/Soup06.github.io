@@ -260,6 +260,6 @@ tagsButton.addEventListener('click', () => {
 createNewTab()
 checkTabs()
 showNotification("Publicity warning!", 
-                "On submition, all text written will be openly shared to public viewing. Users are able to use whatever information you share in any way they desire. <br><br>Please do not submit private information, or anything pottentially offensive. You can find our terms ", 
+                "On submission, all text will be publicly viewable. <br>Please do not submit private information or anything potentially offensive. You can find our terms ", 
                 'terms.html', 
                 "<strong>here.</strong>")

@@ -19,7 +19,9 @@
     --text-backer:#eeeeee6b;
 }
 .dark-mode{
-    /*--background: #1A202C;
+    /*
+    V01
+    --background: #1A202C;
     --dark-main: #4A698A; 
     --light-main: #2D3748;
     --dark-secondary: #90CDF4; 
@@ -36,6 +38,7 @@
     --body-header-box-shadow: #2C52824B;
     --page-header-shadow: #2C52828A;
     
+    V02
     --background:#252e28;
     --dark-main:#3F4F44;
     --light-main:#2C3930;
@@ -56,7 +59,7 @@
     
     */
 
-
+    /* V03 */
     --background:#111316;
     --dark-main:#2e333a;
     --light-main:#2c3039;
