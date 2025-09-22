@@ -202,7 +202,7 @@ submitCreatorButton.addEventListener('click', () => {
         parentsInput.value, 
         tagsInput.value, 
         dataToText])
-    ///if (textClean) {submitCreator()}
+    if (textClean) {submitCreator()}
 })
 
 //Checks when the headerInput bar looses focus, and updates the tab titles

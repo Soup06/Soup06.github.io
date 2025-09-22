@@ -36,6 +36,7 @@ let displays = {}
 //let bannedWords = ["word", "horse"]
 
 //Shuffles an array 
+/*
 function shuffle(array) {
     let currentIndex = array.length;
 
@@ -49,6 +50,18 @@ function shuffle(array) {
         // And swap it with the current element.
         [array[currentIndex], array[randomIndex]] = [
         array[randomIndex], array[currentIndex]];
+    }
+}*/
+function shuffle(array) {
+    let currIndex = array.length;
+
+    while (currIndex != 0) {
+        let randIndex = Math.floor(Math.random() * currIndex);
+        currIndex -= 1;
+
+        [array[currIndex], array[randIndex]] = [
+            array[randIndex], array[currIndex]
+        ];
     }
 }
 
@@ -86,6 +99,13 @@ function openPopup(subjectObject, subjectKey) {
         let reviewflex = document.getElementsByClassName(".review-area-flex-box")
         reviewSection.style.display = "block"
     }
+
+    //Sound effects
+    
+    let swooshSound = document.getElementById("sfxSwoosh");
+
+    swooshSound.currentTime = 0; 
+    swooshSound.play();
 
 
     //Makes all the tabs
@@ -259,6 +279,17 @@ function displayAllScenes(){
     for (let i = 0; i < displayKeys.length; i ++){
         displayNewScene(displayKeys[i])
     }
+
+    //Grabs all the scenes
+    let scenes = document.querySelectorAll(".scene-view-flex-box");
+    let audio = document.getElementById("sfxHover");
+    scenes.forEach(scene => {
+        scene.addEventListener("mouseenter", () => {
+            audio.currentTime = 0; // rewind so it can play again
+            audio.play();
+            console.log("a")
+        });
+    });
 }
 
 //Enter key for search bar
@@ -585,6 +616,10 @@ readDatabase("displays").then(data => {
         displays = data
     }
 })
+
+
+
+
 
 
 export { displays, swearCheck, showNotification, shuffle, openPopup, closePopup, displayText, checkPopupTabs, displayNewScene, displayAllScenes, enterSearchQuery, displayReview, displayAllReviews, submitReview }

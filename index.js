@@ -253,6 +253,9 @@ let openExplaination={
     tags: ["place","New Zealand","national park","UNESCO","nature","hiking","fjords","wildlife","adventure","ecotourism","landscape"]
 }
 
+
+
+
 //Submit button on reviews
 reviewSubmitButton.addEventListener('click', () => {
     submitReview(starRating)
@@ -268,6 +271,7 @@ readDatabase("displays").then(data => {
         displayAllScenes()
     }
 })
+
 
 if (window.localStorage.getItem("firstOpen") == null) {
     openPopup(openExplaination)

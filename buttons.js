@@ -7,6 +7,8 @@ let crashButton = document.getElementById("crash-button");
 let homeButton = document.getElementById("main-menu-button");
 let displayKeys = null
 
+let clickSound = document.getElementById("sfxClick");
+let swooshSound = document.getElementById("sfxSwoosh");
 
 
 //Light/dark mode
@@ -34,6 +36,11 @@ if (darkModeSwitch){
             document.body.classList.remove("dark-mode")
         }
     })
+
+    darkModeSwitch.addEventListener('mouseenter', () => {
+        /*swooshSound.currentTime = 0; 
+        swooshSound.play();*/
+    });
 }
 
 if (luckyButton){
@@ -53,6 +60,11 @@ if (editorPageButton){
         //<a href="editor.html"></a>
         window.location.href="editor.html"
     })
+
+    editorPageButton.addEventListener('mouseenter', () => {
+        clickSound.currentTime = 0; 
+        clickSound.play();
+    });
 }
 
 if (crashButton){
@@ -66,4 +78,9 @@ if (homeButton){
     homeButton.addEventListener('click', () => {
         window.location.href="index.html"
     })
+    
+    homeButton.addEventListener('mouseenter', () => {
+        clickSound.currentTime = 0; 
+        clickSound.play();
+    });
 }

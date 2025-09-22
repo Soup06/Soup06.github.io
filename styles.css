@@ -322,6 +322,12 @@
     font-family: Tahoma, sans-serif;
     color:var(--dark-secondary);
 }
+.page-header-img{
+    position: absolute;
+    right:15px;
+    height:98%;
+    width:auto;
+}
 .popup-tab-bar-flex-box{
     display:flex;
     margin-right:15px;
@@ -1136,6 +1142,9 @@ textarea.button-head-text-input::placeholder{
     font-style: italic;
     position: absolute;
     margin-left:17px;
+}
+.tooltip-text{
+    z-index: 10;
 }
 .tooltip-item:hover .tooltip-text{
     visibility: visible;
