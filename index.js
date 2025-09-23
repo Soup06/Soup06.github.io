@@ -227,11 +227,13 @@ starSelectors.forEach((select, index) => {
     });
 });
 
+
+//The popup data for first open of website
 let openExplaination={
     buttonTitle: "Archive$6841",
     title: "Archive of <br> Aleatoria",
     img: "images/earth.jpeg",
-    birthday: "12 June 2023",
+    birthday: "12 June 2025",
     parents: "Soup06",
     info: {
         info1: {
@@ -250,7 +252,7 @@ let openExplaination={
     },
     reviews: {
     },
-    tags: ["place","New Zealand","national park","UNESCO","nature","hiking","fjords","wildlife","adventure","ecotourism","landscape"]
+    tags: [""]
 }
 
 
