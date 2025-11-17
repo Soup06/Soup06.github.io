@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dice roller</title>
+        <link rel="icon" href="">
+        <link rel="stylesheet" type="text/css" href="dice_styles.css">
+        
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                background-color:whitesmoke;
+                scrollbar-width:none;
+                bottom:0;
+                height:100vh;
+                transition: all .3s ease-in;
+                overflow-y:hidden;
+                
+            }		
+            
+        </style>
+    </head>
+    <body>
+        <div class="body-flex" id="mainBody">
+            <!--Dice will be created here in JS--> 
+        </div>
+
+        <!--Buttons and stuff-->
+        <div id="rollButton">
+            <div id="rollText">
+                Roll
+            </div>
+        </div>
+
+
+        <!--Hoverable menu on the left side-->
+        <div id="leftMenu" class="menu-section">
+            <div class="menu-button dice-adder" id="6">
+                <img src="images/d6/six.png">
+            </div>
+            <div class="menu-button dice-adder" id="4">
+                <img src="images/d4/four.png">
+            </div>
+            <div class="menu-button dice-adder" id="8">
+                <img src="images/d8/eight.png">
+            </div>
+        </div>
+
+
+        <!--Hoverable menu on the right side-->
+        <div id="rightMenu" class="menu-section">
+            <div class="menu-text-layer">
+                <a>
+                    Total
+                </a>
+                <div id="totalRollContainer">
+                    <div id="totalRoll">
+
+                    </div>
+                </div>
+            </div>
+            <div class="roll-stats-container">
+                <div class="roll-stat-individual" id="maxRollDisplay">
+                    ds
+                </div>
+                <div class="roll-stat-individual" id="minRollDisplay">
+                    ds
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+    <script type="module" src="dice_functional.js"></script>
+    </body>
+</html>
