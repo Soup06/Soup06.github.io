@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Metronome</title>
+        <link rel="icon" href="">
+        <link rel="stylesheet" type="text/css" href="metronomeStyles.css">
+        
+        <style>
+            	
+        </style>
+    </head>
+    <body>
+        <audio id="sfxTick">
+            <source src="Audio/metronome-85688 (1).mp3" ></source>
+            Your browser isn't invited for super fun audio time.
+        </audio>
+
+
+        <div id="main_wrapper">
+            <h1 id="bpm_display">Something's wrong</h1>
+            <button type="button" id="change_interval_button" class="button_default">Apply settings</button>
+            <input type="text" id="bpm_input" value="60">
+        </div>
+
+        <div id="beat_wrapper"></div>
+
+
+
+        <script type="module" src="metronomeBrain.js"></script>
+    </body>
+</html>
